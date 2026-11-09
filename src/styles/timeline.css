@@ -1,0 +1,82 @@
+/* ── Bottom timeline ────────────────────────────────────── */
+.timeline {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 16px;
+  height: var(--timeline-h);
+  padding: 0 16px;
+  background: var(--panel);
+  border-top: 1px solid var(--line);
+}
+
+.timeline__track { display: flex; align-items: center; gap: 4px; min-width: 0; }
+.timeline__track.is-idle .timeline__step { color: var(--ink-3); }
+
+.timeline__steps {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+  list-style: none;
+  gap: 2px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.timeline__steps::-webkit-scrollbar { display: none; }
+.timeline__item { display: flex; align-items: center; flex-shrink: 0; }
+/* Thin connector between steps. */
+.timeline__item + .timeline__item::before {
+  content: '';
+  display: block;
+  width: 10px;
+  height: 1px;
+  background: var(--line-strong);
+}
+
+.timeline__step {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 26px;
+  padding: 0 8px 0 4px;
+  font-size: var(--text-12);
+  color: var(--ink-2);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-ctl);
+  white-space: nowrap;
+  transition: background-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
+}
+.timeline__step:not(:disabled):hover { background: var(--raised); color: var(--ink); }
+.timeline__step.is-empty { opacity: 0.4; cursor: not-allowed; }
+.timeline__n {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1px solid var(--line-strong);
+  font-size: 11px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-2);
+}
+.timeline__step.is-reached .timeline__n { background: var(--ink-2); border-color: var(--ink-2); color: var(--on-accent); }
+.timeline__step.is-reached { color: var(--ink); }
+.timeline__step.is-current { background: var(--raised); border-color: var(--line-strong); color: var(--ink); }
+.timeline__step.is-current .timeline__n { background: var(--ink); border-color: var(--ink); color: var(--on-accent); }
+.timeline__label { font-weight: 500; }
+
+.timeline__hint { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 360px; }
+@media (max-width: 1600px) { .timeline__hint { display: none; } }
+/* Ten labelled steps fit a 1366 px projector once the padding and connectors shrink. */
+@media (max-width: 1440px) {
+  .timeline__step { gap: 4px; padding: 0 5px 0 3px; }
+  .timeline__item + .timeline__item::before { width: 6px; }
+}
+@media (max-width: 1280px) {
+  .timeline__label { display: none; }
+  .timeline__step { padding: 0 4px; }
+}

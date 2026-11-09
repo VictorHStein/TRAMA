@@ -1,0 +1,283 @@
+/* ── 2D graph shell ─────────────────────────────────────── */
+.flow2d-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  width: 100%;
+}
+
+.flow2d-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 12px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--line);
+  font-size: var(--text-12);
+  color: var(--ink-2);
+  flex-shrink: 0;
+}
+.flow2d-toolbar__stat { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.flow2d-toolbar__stat strong { color: var(--ink); font-weight: 600; }
+.flow2d-toolbar__spacer { flex: 1; }
+
+.flow2d-canvas {
+  flex: 1;
+  position: relative;
+  min-height: 0;
+  background: var(--ground);
+}
+
+/* ── React Flow chrome ──────────────────────────────────── */
+.react-flow__background { background: transparent; }
+.react-flow__attribution { display: none; }
+
+.react-flow__controls {
+  left: 12px;
+  bottom: 12px;
+  background: var(--panel);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-float);
+  box-shadow: var(--shadow-float);
+  overflow: hidden;
+}
+.react-flow__controls-button {
+  width: 28px;
+  height: 28px;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink-2);
+}
+.react-flow__controls-button:last-child { border-bottom: 0; }
+.react-flow__controls-button:hover { background: var(--raised); color: var(--ink); }
+.react-flow__controls-button svg { fill: currentColor; max-width: 12px; max-height: 12px; }
+
+.react-flow__minimap {
+  top: 12px !important;
+  right: 12px !important;
+  bottom: auto !important;
+  width: 200px;
+  height: 130px;
+  margin: 0;
+  background: var(--panel) !important;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-float);
+  box-shadow: var(--shadow-float);
+  overflow: hidden;
+}
+.react-flow__minimap svg { width: 100%; height: 100%; }
+
+/* Nav hint: the chip sits to the right of the zoom controls; the open card above them. */
+.flow2d-canvas .nav-hint--chip { left: 48px; bottom: 12px; }
+.flow2d-canvas .nav-hint:not(.nav-hint--chip) { left: 48px; bottom: 12px; }
+
+/* ── Entity card ────────────────────────────────────────── */
+.arch-node {
+  position: relative;
+  display: flex;
+  width: 184px;
+  height: 56px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-ctl);
+  color: var(--ink);
+  cursor: pointer;
+  overflow: hidden;
+  transition:
+    border-color var(--dur-fast) var(--ease),
+    opacity var(--dur-fast) var(--ease),
+    box-shadow var(--dur-fast) var(--ease);
+}
+.arch-node:hover { border-color: var(--line-strong); }
+
+.arch-node__stripe {
+  flex: 0 0 3px;
+  background: var(--node-color);
+}
+.arch-node__main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 3px;
+  min-width: 0;
+  flex: 1;
+  padding: 6px 10px 6px 9px;
+}
+.arch-node__head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  height: 16px;
+}
+.arch-node__icon { color: var(--node-color); flex-shrink: 0; }
+.arch-node__code {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.arch-node__status {
+  margin-left: auto;
+  height: 16px;
+  padding: 0 6px;
+  font-size: 10px;
+  background: transparent;
+}
+.arch-node__status .chip__dot { width: 5px; height: 5px; }
+.arch-node__name {
+  font-size: var(--text-13);
+  font-weight: 500;
+  line-height: 1.25;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Selection hierarchy: selected → highlighted (neighbour) → dimmed (unrelated). */
+.arch-node.is-selected {
+  border-color: var(--ink);
+  box-shadow: 0 0 0 1px var(--ink), 0 0 18px rgba(232, 237, 243, 0.18);
+  z-index: 5;
+}
+.arch-node.is-highlighted {
+  border-color: var(--line-strong);
+  background: var(--raised);
+}
+.arch-node.is-dimmed {
+  opacity: 0.25;
+  pointer-events: none;
+}
+
+.arch-node__handle { opacity: 0; width: 6px !important; height: 6px !important; min-width: 0 !important; min-height: 0 !important; }
+
+/* A command just created this: the card arrives, the line draws itself. */
+@keyframes arch-node-in {
+  from { opacity: 0; transform: scale(0.72); box-shadow: 0 0 0 0 var(--node-color); }
+  60% { box-shadow: 0 0 0 10px color-mix(in srgb, var(--node-color) 45%, transparent); }
+  to { opacity: 1; transform: scale(1); box-shadow: 0 0 0 16px transparent; }
+}
+.arch-node.is-new { animation: arch-node-in 560ms var(--ease) both; }
+@keyframes arch-edge-in {
+  from { stroke-dasharray: 0 1; }
+  to { stroke-dasharray: 1 0; }
+}
+.react-flow__edge-path.arch-edge-new { animation: arch-edge-in 800ms cubic-bezier(0.77, 0, 0.175, 1) both; }
+@media (prefers-reduced-motion: reduce) {
+  .arch-node.is-new, .react-flow__edge-path.arch-edge-new { animation: none; }
+}
+
+/* ── Command bar on the graph ───────────────────────────── */
+.graph-cmd { position: relative; display: flex; align-items: center; gap: 6px; flex: 0 1 430px; min-width: 150px; }
+.graph-cmd__input {
+  flex: 1;
+  min-width: 0;
+  height: 26px;
+  padding: 0 8px;
+  font: inherit;
+  font-size: var(--text-12);
+  color: var(--ink);
+  background: var(--ground);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-ctl);
+}
+.graph-cmd__input::placeholder { color: var(--ink-3); }
+.graph-cmd__input:focus { border-color: var(--accent); outline: none; }
+.graph-cmd .builder-btn, .graph-cmd button { flex-shrink: 0; }
+.graph-cmd__said {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  z-index: 20;
+  max-width: 100%;
+  padding: 5px 10px;
+  font-size: var(--text-12);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  background: var(--panel);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-float);
+  box-shadow: var(--shadow-float);
+}
+.graph-cmd__said.is-ok { color: var(--ok); }
+.graph-cmd__said.is-fail { color: var(--fail); }
+.split-canvas .graph-cmd { display: none; }
+
+/* ── Swimlanes and family outlines ─────────────────────── */
+.arch-row-bg {
+  position: relative;
+  pointer-events: none;
+  background: color-mix(in srgb, var(--row-color) 6%, transparent);
+  border-top: 1px solid color-mix(in srgb, var(--row-color) 18%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--row-color) 18%, transparent);
+}
+.arch-row-bg__label {
+  position: absolute;
+  top: 5px;
+  left: 6px;
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: color-mix(in srgb, var(--row-color) 70%, var(--ink));
+}
+.arch-family-bg {
+  pointer-events: none;
+  border: 1px dashed color-mix(in srgb, var(--row-color) 40%, transparent);
+  border-radius: var(--radius-ctl);
+}
+
+/* ── Edge badges ───────────────────────────────────────── */
+.relation-badge { width: 20px; height: 20px; font-size: 12px; border: 0; box-shadow: 0 0 0 1.5px var(--ground); }
+.relation-badge.is-emphasized { width: 22px; height: 22px; font-size: 12px; }
+.relation-badge.is-selected { width: 24px; height: 24px; font-size: 13px; box-shadow: 0 0 0 1.5px var(--ground), 0 0 0 3px var(--ink); }
+/* The wrapper's transform carries the badge position on the edge, so hover
+   feedback scales the inner badge only; overriding the wrapper's transform
+   would drop the position and make the badge jump to the canvas origin. */
+.arch-edge-badge-wrap {
+  display: block;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  line-height: 0;
+  cursor: pointer;
+}
+/* --badge-scale (set by the flow from the zoom) keeps badges readable when the graph is fitted. */
+.arch-edge-badge-wrap .relation-badge {
+  transform: scale(var(--badge-scale, 1));
+  transition: transform var(--dur-fast) var(--ease);
+}
+.arch-edge-badge-wrap:hover .relation-badge { transform: scale(calc(var(--badge-scale, 1) * 1.15)); }
+.arch-edge-badge-wrap:focus-visible { outline: none; }
+.arch-edge-badge-wrap:focus-visible .relation-badge { outline: 2px solid var(--focus); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) {
+  .arch-edge-badge-wrap .relation-badge { transition: none; }
+}
+
+/* Dash flow, used only on the selected edge. */
+@keyframes arch-edge-flow {
+  from { stroke-dashoffset: 0; }
+  to { stroke-dashoffset: -20; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .react-flow__edge path { animation: none !important; }
+}
+
+/* ── Impact pulse after an edit, and elements switched off in the live mode ── */
+@keyframes arch-node-ripple {
+  from { box-shadow: 0 0 0 0 var(--accent); border-color: var(--accent); }
+  to { box-shadow: 0 0 0 14px transparent; border-color: var(--line); }
+}
+.arch-node.is-rippling { animation: arch-node-ripple 200ms var(--ease) var(--ripple-delay, 0ms) both; }
+.arch-node.is-off { opacity: 0.32; }
+.arch-node.is-off .arch-node__stripe { background: var(--ink-3); }
+@media (prefers-reduced-motion: reduce) {
+  .arch-node.is-rippling { animation: none; border-color: var(--accent); }
+}

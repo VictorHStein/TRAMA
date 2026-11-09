@@ -1,0 +1,147 @@
+/*
+ * Design tokens (see docs/arquitetura.md, section on visual rules).
+ *
+ * Neutrals carry a cool-blue bias and are never pure black/white. Colour on
+ * the canvas is always semantic (category, relation type, state) and comes
+ * from the JSON; the chrome around it is neutral. Legacy variable names are
+ * kept below as aliases so older CSS keeps resolving.
+ */
+:root {
+  /* ── Surfaces ────────────────────────────── */
+  --ground:  #0F141B;   /* canvas */
+  --panel:   #161C25;   /* panels, one step up */
+  --raised:  #1E2632;   /* hover, popovers, active segment */
+
+  /* ── Lines ───────────────────────────────── */
+  --line:        rgba(255, 255, 255, 0.10);
+  --line-strong: rgba(255, 255, 255, 0.20);
+
+  /* ── Text ────────────────────────────────── */
+  --ink:   #E8EDF3;
+  --ink-2: #A3AFBF;
+  --ink-3: #8490A1;
+  --on-accent: #0F141B; /* dark text over accent / coloured badges */
+
+  /* ── Accent + focus ──────────────────────── */
+  --accent: #7FB0FF;
+  --focus:  rgba(138, 187, 255, 0.75);
+
+  /* ── State (red is reserved for state) ───── */
+  --ok:   #3DBE7A;
+  --warn: #E8A33D;
+  --fail: #E5646A;
+  --info: #5CB8D6;
+
+  /* ── Typography ──────────────────────────── */
+  --font-ui:   'IBM Plex Sans', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+  --text-12: 12px;
+  --text-13: 13px;
+  --text-14: 14px;
+  --text-16: 16px;
+  --text-20: 20px;
+  --text-24: 24px;
+  --lh-ui: 1.35;
+  --lh-body: 1.5;
+
+  /* ── Spacing (4 px grid) ─────────────────── */
+  --sp-1: 4px;  --sp-2: 8px;  --sp-3: 12px;
+  --sp-4: 16px; --sp-5: 20px; --sp-6: 24px;
+  --sp-8: 32px;
+
+  /* ── Shape + elevation (floating only) ───── */
+  --radius-ctl:   4px;   /* buttons, inputs, chips */
+  --radius-float: 6px;   /* palette, tooltips, menus */
+  --shadow-float: 0 8px 24px rgba(0, 0, 0, 0.45);
+
+  /* ── Motion ──────────────────────────────── */
+  --ease:     cubic-bezier(0.23, 1, 0.32, 1);
+  --dur-fast: 150ms;
+  --dur:      200ms;
+
+  /* ── Layout ──────────────────────────────── */
+  --left-panel-w: 260px;
+  --left-rail-w:  56px;
+  --right-panel-w: 360px;
+  --topbar-h:   48px;
+  --timeline-h: 48px;
+
+  /* ═══ Legacy aliases (keep old CSS resolving) ═══ */
+  --bg-base:      var(--ground);
+  --bg-surface:   var(--ground);
+  --bg-panel:     var(--panel);
+  --bg-card:      var(--panel);
+  --bg-hover:     var(--raised);
+  --bg-selected:  var(--raised);
+  --bg-panel-glass: var(--panel);
+  --bg-card-glass:  var(--panel);
+
+  --text-primary:   var(--ink);
+  --text-secondary: var(--ink-2);
+  --text-muted:     var(--ink-3);
+  --text-accent:    var(--accent);
+
+  --border-subtle:  var(--line);
+  --border-default: var(--line);
+  --border-accent:  var(--accent);
+  --border-warm:    var(--fail);
+
+  --s-verified:    var(--ok);
+  --s-passed:      var(--ok);
+  --s-in-progress: var(--info);
+  --s-planned:     var(--ink-3);
+  --s-failed:      var(--fail);
+  --s-open:        var(--warn);
+  --s-waived:      #B48CFF;
+
+  --crit-low:      var(--ok);
+  --crit-medium:   var(--warn);
+  --crit-high:     #FF8A65;
+  --crit-critical: var(--fail);
+
+  --text-xs: var(--text-12); --text-sm: var(--text-12); --text-base: var(--text-13);
+  --text-md: var(--text-14); --text-lg: var(--text-16); --text-xl: var(--text-20);
+
+  --shadow-card: none;
+  --shadow-glow: none;
+  --shadow-risk: none;
+
+  --transition-fast: var(--dur-fast) var(--ease);
+  --transition-base: var(--dur) var(--ease);
+}
+
+/*
+ * Light theme, for projectors and printing. Only the neutrals, accent and
+ * state colours change; category and relation colours come from the JSON
+ * and stay the same in both themes. The 3D scenes keep a dark sky on purpose.
+ */
+:root[data-theme="light"] {
+  --ground:  #E9EDF2;
+  --panel:   #FBFCFD;
+  --raised:  #DDE3EA;
+
+  --line:        rgba(20, 32, 46, 0.12);
+  --line-strong: rgba(20, 32, 46, 0.26);
+
+  --ink:   #16212E;
+  --ink-2: #435061;
+  --ink-3: #5A6676;
+  --on-accent: #FBFCFD;
+
+  --accent: #1D5FD0;
+  --focus:  rgba(29, 95, 208, 0.55);
+
+  --ok:   #0E7443;
+  --warn: #8F5400;
+  --fail: #B42F37;
+  --info: #096C8C;
+
+  --shadow-float: 0 8px 24px rgba(20, 32, 46, 0.16);
+  color-scheme: light;
+}
+
+@media (max-width: 1366px) {
+  :root {
+    --right-panel-w: 320px;
+  }
+}

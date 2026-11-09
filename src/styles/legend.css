@@ -1,0 +1,99 @@
+/* ── Legend (left column) ───────────────────────────────── */
+.legend {
+  background: var(--panel);
+  border-right: 1px solid var(--line);
+  padding: 10px 12px 16px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+.legend__head { display: flex; align-items: center; justify-content: space-between; }
+.legend__section { display: flex; flex-direction: column; gap: 6px; }
+.legend__section-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.legend__list { list-style: none; display: flex; flex-direction: column; }
+
+.legend-row {
+  display: grid;
+  grid-template-columns: 18px 36px 1fr;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 4px 6px;
+  margin: 0 -6px;
+  text-align: left;
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius-ctl);
+  color: var(--ink);
+  transition: background-color var(--dur-fast) var(--ease), opacity var(--dur-fast) var(--ease);
+}
+.legend-row:hover { background: var(--raised); }
+.legend-row.is-off { opacity: 0.45; }
+.legend-row.is-off:hover { opacity: 0.8; }
+.legend-row .num-badge { border-width: 1.5px; }
+.legend-row__line { display: block; }
+.legend-row__text { display: flex; flex-direction: column; min-width: 0; line-height: 1.25; }
+.legend-row__label { font-size: var(--text-13); font-weight: 500; color: var(--ink); }
+.legend-row__id { font-size: 11px; color: var(--ink-3); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.legend__cats { display: flex; flex-wrap: wrap; gap: 4px; }
+.legend-cat {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 24px;
+  padding: 0 8px;
+  font-size: var(--text-12);
+  color: var(--ink);
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-ctl);
+  transition: background-color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease), opacity var(--dur-fast) var(--ease);
+}
+.legend-cat:hover { background: var(--raised); border-color: var(--line-strong); }
+.legend-cat.is-off { opacity: 0.45; }
+
+.legend-toggle {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: var(--text-12);
+  color: var(--ink-2);
+  cursor: pointer;
+  line-height: var(--lh-ui);
+}
+.legend-toggle input { accent-color: var(--accent); cursor: pointer; margin-top: 1px; }
+.legend-toggle:hover { color: var(--ink); }
+
+/* Collapsed rail */
+.legend--rail {
+  padding: 8px 0 12px;
+  align-items: center;
+  gap: 12px;
+}
+.legend-rail__group { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.legend-rail__badge {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1.5px solid transparent;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+  transition: opacity var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease);
+}
+.legend-rail__badge.is-off { opacity: 0.5; }
+.legend-rail__badge:hover { transform: scale(1.08); }
+.legend-rail__dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1.5px solid transparent;
+  padding: 0;
+  transition: opacity var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease);
+}
+.legend-rail__dot.is-off { opacity: 0.5; }
+.legend-rail__dot:hover { transform: scale(1.15); }

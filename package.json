@@ -1,0 +1,47 @@
+{
+  "name": "trama",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "description": "Modelagem de sistemas espaciais como rede rastreável, com grafo 2D, cena 3D e análise de missão no navegador.",
+  "engines": {
+    "node": ">=20.19"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "lint": "eslint src",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "check": "npm run lint && npm run test && npm run build",
+    "release": "npm run build && node scripts/empacotar-release.mjs"
+  },
+  "dependencies": {
+    "@fontsource/ibm-plex-mono": "^5.3.0",
+    "@fontsource/ibm-plex-sans": "^5.3.0",
+    "@react-three/drei": "^9.95.3",
+    "@react-three/fiber": "^8.14.0",
+    "@xyflow/react": "^12.10.2",
+    "astronomy-engine": "^2.1.19",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "three": "^0.166.0",
+    "zod": "^3.23.0",
+    "zustand": "^5.0.13"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.5",
+    "@types/react": "^18.3.4",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "eslint": "^9.39.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "globals": "^15.15.0",
+    "satellite.js": "^7.1.0",
+    "typescript": "^5.6.0",
+    "typescript-eslint": "^8.70.1",
+    "vite": "^5.4.1",
+    "vitest": "^2.1.9"
+  }
+}

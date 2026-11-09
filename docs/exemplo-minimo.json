@@ -1,0 +1,92 @@
+{
+  "metadata": {
+    "projectName": "MiniSat",
+    "version": "0.1.0",
+    "description": "Modelo mínimo: missão, dois requisitos, dois subsistemas e três componentes.",
+    "schemaVersion": 2
+  },
+  "mission": {
+    "id": "missao",
+    "name": "MiniSat",
+    "orbit": { "altitudeKm": 550, "inclinationDeg": 97.6, "ltanHours": 10.5, "epoch": "2027-03-21T00:00:00Z" },
+    "groundStations": [
+      { "id": "gs_sjc", "name": "Estação solo", "latDeg": -23.21, "lonDeg": -45.86, "minElevationDeg": 10 }
+    ],
+    "lifetimeYears": 3
+  },
+  "categories": [
+    { "id": "mission", "label": "Missão", "color": "#c4a6ff", "shape2D": "hexagon", "shape3D": "sphere" },
+    { "id": "requirement", "label": "Requisito", "color": "#82b1ff", "shape2D": "document", "shape3D": "flatPanel" },
+    { "id": "subsystem", "label": "Subsistema", "color": "#5bcf7a", "shape2D": "group", "shape3D": "box" },
+    { "id": "component", "label": "Componente", "color": "#f2c14e", "shape2D": "box", "shape3D": "smallBox" }
+  ],
+  "relationTypes": [
+    { "id": "satisfies", "index": 1, "label": "Satisfaz requisito", "color": "#82b1ff", "lineStyle": "solid", "directed": true, "description": "A origem atende ao requisito de destino." },
+    { "id": "provides_power_to", "index": 2, "label": "Fornece potência", "color": "#f2c14e", "lineStyle": "solid", "directed": true, "description": "A origem alimenta o destino." }
+  ],
+  "entities": [
+    { "id": "missao", "name": "MiniSat", "category": "mission", "step": 1 },
+    {
+      "id": "req_massa", "code": "REQ-001", "name": "Massa total", "category": "requirement", "step": 2,
+      "requirement": {
+        "text": "A massa seca, com margens, deve ser de no máximo 6 kg.",
+        "type": "constraint",
+        "rule": "engine.budget_massa_total <= 6",
+        "verification": { "method": "Analysis" }
+      }
+    },
+    {
+      "id": "req_eclipse", "code": "REQ-002", "name": "Autonomia em eclipse", "category": "requirement", "step": 2,
+      "requirement": {
+        "text": "A bateria deve sustentar o modo Eclipse no pior eclipse da órbita sem passar de 30 % de descarga.",
+        "type": "performance",
+        "rule": "bateria.capacidade_wh * 0.3 >= engine.mode_eclipse_w * engine.orbit_eclipse_max_min / 60",
+        "verification": { "method": "Analysis" }
+      }
+    },
+    { "id": "eps", "short": "EPS", "name": "Subsistema de potência", "category": "subsystem", "parentId": "missao", "step": 3 },
+    { "id": "obc", "short": "OBC", "name": "Computador de bordo", "category": "subsystem", "parentId": "missao", "step": 3 },
+    {
+      "id": "bateria", "name": "Bateria", "category": "component", "parentId": "eps", "step": 4,
+      "parameters": [
+        { "id": "mass", "name": "Massa", "unit": "kg", "value": 0.4, "maturity": "cots" },
+        { "id": "capacidade_wh", "name": "Capacidade", "unit": "Wh", "value": 40 }
+      ]
+    },
+    {
+      "id": "painel", "name": "Painel solar", "category": "component", "parentId": "eps", "step": 4,
+      "parameters": [
+        { "id": "area_m2", "name": "Área", "unit": "m²", "value": 0.12 },
+        { "id": "mass", "name": "Massa", "unit": "kg", "formula": "self.area_m2 * 4", "maturity": "new" }
+      ]
+    },
+    {
+      "id": "placa_obc", "name": "Placa do computador", "category": "component", "parentId": "obc", "step": 4,
+      "parameters": [
+        { "id": "mass", "name": "Massa", "unit": "kg", "value": 0.1, "maturity": "cots" },
+        { "id": "power", "name": "Consumo", "unit": "W", "value": 2 }
+      ]
+    }
+  ],
+  "relations": [
+    { "id": "r1", "type": "satisfies", "source": "bateria", "target": "req_eclipse", "step": 4 },
+    { "id": "r2", "type": "provides_power_to", "source": "eps", "target": "obc", "step": 3 },
+    { "id": "r3", "type": "satisfies", "source": "obc", "target": "req_massa", "step": 3 }
+  ],
+  "budgets": [
+    { "id": "massa", "label": "Massa seca", "unit": "kg", "kind": "mass", "parameter": "mass", "allocated": 6, "systemMargin": 0.2 }
+  ],
+  "modes": [
+    {
+      "id": "nominal", "name": "Nominal", "durationFraction": "1 - engine.orbit_eclipse_max_fraction",
+      "active": ["eps", "obc"],
+      "loads": [{ "entityId": "placa_obc", "parameterRef": "placa_obc.power" }]
+    },
+    {
+      "id": "eclipse", "name": "Eclipse", "durationFraction": "engine.orbit_eclipse_max_fraction",
+      "active": ["eps", "obc"],
+      "loads": [{ "entityId": "placa_obc", "parameterRef": "placa_obc.power" }]
+    }
+  ],
+  "views": { "defaultStep": 4, "maxStep": 4 }
+}

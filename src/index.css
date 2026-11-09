@@ -1,0 +1,64 @@
+@import './styles/visualTokens.css';
+@import './styles/app.css';
+@import './styles/topbar.css';
+@import './styles/legend.css';
+@import './styles/sidepanel.css';
+@import './styles/timeline.css';
+@import './styles/flow.css';
+@import './styles/scene3d.css';
+@import './styles/json.css';
+@import './styles/tutorial.css';
+@import './styles/matrices.css';
+@import './styles/home.css';
+@import './styles/tour.css';
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { color-scheme: dark; }
+
+html, body, #root {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: var(--font-ui);
+  font-size: var(--text-13);
+  line-height: var(--lh-ui);
+  color: var(--ink);
+  background: var(--ground);
+  -webkit-font-smoothing: antialiased;
+}
+
+button { font: inherit; color: inherit; cursor: pointer; }
+button:disabled { cursor: not-allowed; }
+input, select, textarea { font: inherit; color: inherit; }
+code, kbd, samp { font-family: var(--font-mono); }
+
+/* Numbers that sit in columns or get compared line up. */
+.num, .tabular { font-variant-numeric: tabular-nums; }
+
+/* Keyboard focus: a 2 px ring on every interactive element. Mouse clicks
+ * don't show it (:focus-visible), keyboard does. */
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+input:focus-visible, textarea:focus-visible {
+  outline-offset: 0;
+}
+
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.22); }
+
+/* Reduced motion: keep colour/opacity feedback, drop displacement and loops. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

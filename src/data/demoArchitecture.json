@@ -1,0 +1,2035 @@
+{
+  "metadata": {
+    "projectName": "DemoSat-TG",
+    "version": "2.0.0",
+    "description": "Arquitetura conceitual de um satélite de observação da Terra para demonstrar relações sistêmicas em 2D e 3D.",
+    "schemaVersion": 2
+  },
+  "mission": {
+    "id": "mission_demosat",
+    "name": "Missão DemoSat-TG: observação da Terra",
+    "orbit": {
+      "altitudeKm": 600,
+      "inclinationDeg": 97.8,
+      "eccentricity": 0,
+      "ltanHours": 10.5,
+      "epoch": "2027-03-21T00:00:00Z"
+    },
+    "groundStations": [
+      {
+        "id": "gs_sjc",
+        "name": "Estação solo ITA (São José dos Campos)",
+        "latDeg": -23.21,
+        "lonDeg": -45.86,
+        "altKm": 0.6,
+        "minElevationDeg": 10
+      }
+    ],
+    "lifetimeYears": 5,
+    "analysis": {
+      "link": {
+        "txPowerW": "transceiver.tx_power_w",
+        "txGainDbi": "antenna.gain_dbi",
+        "frequencyGHz": "transceiver.frequency_ghz",
+        "dataRateMbps": "transceiver.data_rate_mbps",
+        "rxGainDbi": "gs_ita.rx_gain_dbi",
+        "systemNoiseTempK": "gs_ita.system_noise_temp_k",
+        "requiredEbN0Db": 4.4
+      },
+      "power": {
+        "generationW": "eps.power_generation",
+        "batteryCapacityWh": "battery.capacity_wh",
+        "depthOfDischarge": "battery.dod_max",
+        "batteryEfficiency": "battery.efficiency",
+        "solarArrayAreaM2": "solar_array.area_m2",
+        "eclipseModeId": "eclipse",
+        "cellEfficiency": "solar_array.cell_efficiency",
+        "degradationPerYear": "solar_array.degradation_per_year",
+        "sunIncidenceDeg": "engine.orbit_beta_deg"
+      },
+      "data": {
+        "sources": [
+          {
+            "entityId": "camera",
+            "rateMbps": "camera.data_rate_mbps",
+            "dutyFraction": "camera.duty_fraction"
+          }
+        ],
+        "downlinkRateMbps": "transceiver.data_rate_mbps",
+        "storageCapacityMB": 32000
+      },
+      "decay": {
+        "dragAreaM2": "seg_space.drag_area_m2",
+        "dragCoefficient": 2.2,
+        "massKg": "engine.budget_mass_total",
+        "massMinKg": "engine.budget_mass_nominal",
+        "solarActivity": "mean"
+      },
+      "thermal": {
+        "absorptivity": 0.06,
+        "emissivity": 0.85,
+        "sunlitAreaM2": "seg_space.sun_area_m2",
+        "radiatorAreaM2": "thermal.radiator_area_m2",
+        "earthFacingAreaM2": "seg_space.nadir_area_m2",
+        "internalPowerW": "engine.orbit_average_power_w",
+        "internalPowerHotW": "engine.orbit_average_power_w",
+        "internalPowerColdW": "engine.mode_safe_w",
+        "heatCapacityJPerK": "seg_space.heat_capacity_j_k",
+        "tMinC": "req_thermal.t_min_c",
+        "tMaxC": "req_thermal.t_max_c"
+      }
+    }
+  },
+  "categories": [
+    {
+      "id": "mission",
+      "label": "Missão",
+      "color": "#c4a6ff",
+      "shape2D": "hexagon",
+      "shape3D": "sphere",
+      "description": "Propósito de mais alto nível do sistema."
+    },
+    {
+      "id": "objective",
+      "label": "Objetivo",
+      "color": "#c3e66e",
+      "shape2D": "rounded",
+      "shape3D": "flatPanel",
+      "description": "Resultado que a missão precisa alcançar; os requisitos derivam dos objetivos."
+    },
+    {
+      "id": "requirement",
+      "label": "Requisito",
+      "color": "#82b1ff",
+      "shape2D": "document",
+      "shape3D": "flatPanel",
+      "description": "Condição que o sistema deve atender."
+    },
+    {
+      "id": "function",
+      "label": "Função",
+      "color": "#2fd1c4",
+      "shape2D": "rounded",
+      "shape3D": "capsule",
+      "description": "Capacidade lógica que o sistema executa."
+    },
+    {
+      "id": "segment",
+      "label": "Segmento",
+      "color": "#8fb6cc",
+      "shape2D": "group",
+      "shape3D": "box",
+      "description": "Primeiro nível da árvore de produto: segmentos espacial, solo e de lançamento."
+    },
+    {
+      "id": "subsystem",
+      "label": "Subsistema",
+      "color": "#5bcf7a",
+      "shape2D": "group",
+      "shape3D": "box",
+      "description": "Bloco físico/lógico principal do satélite."
+    },
+    {
+      "id": "component",
+      "label": "Componente",
+      "color": "#f2c14e",
+      "shape2D": "box",
+      "shape3D": "smallBox",
+      "description": "Elemento dentro de um subsistema."
+    },
+    {
+      "id": "verification",
+      "label": "Verificação",
+      "color": "#ff8ac2",
+      "shape2D": "check",
+      "shape3D": "diamond",
+      "description": "Atividade que comprova requisito atendido."
+    }
+  ],
+  "relationTypes": [
+    {
+      "id": "satisfies",
+      "index": 1,
+      "label": "Satisfaz requisito",
+      "color": "#82b1ff",
+      "lineStyle": "solid",
+      "directed": true,
+      "description": "Indica que uma função, subsistema ou componente satisfaz um requisito."
+    },
+    {
+      "id": "allocated_to",
+      "index": 2,
+      "label": "Alocado para",
+      "color": "#2fd1c4",
+      "lineStyle": "dashed",
+      "directed": true,
+      "description": "Indica alocação de requisito ou função para um elemento físico ou lógico."
+    },
+    {
+      "id": "provides_power_to",
+      "index": 3,
+      "label": "Fornece potência",
+      "color": "#f2c14e",
+      "lineStyle": "solid",
+      "directed": true,
+      "description": "Indica fornecimento de energia elétrica entre subsistemas ou componentes."
+    },
+    {
+      "id": "sends_data_to",
+      "index": 4,
+      "label": "Envia dados",
+      "color": "#5cd3f0",
+      "lineStyle": "solid",
+      "directed": true,
+      "description": "Indica fluxo de dados, telemetria ou payload data."
+    },
+    {
+      "id": "sends_command_to",
+      "index": 5,
+      "label": "Envia comando",
+      "color": "#b48cff",
+      "lineStyle": "dotted",
+      "directed": true,
+      "description": "Fluxo de telecomando, de quem comanda para quem executa."
+    },
+    {
+      "id": "mechanically_attached_to",
+      "index": 6,
+      "label": "Fixação mecânica",
+      "color": "#8c97a6",
+      "lineStyle": "solid",
+      "directed": false,
+      "description": "Indica acoplamento ou fixação estrutural."
+    },
+    {
+      "id": "thermally_coupled_to",
+      "index": 7,
+      "label": "Acoplamento térmico",
+      "color": "#ff8a65",
+      "lineStyle": "dashed",
+      "directed": false,
+      "description": "Indica troca ou acoplamento térmico relevante."
+    },
+    {
+      "id": "verifies",
+      "index": 8,
+      "label": "Verifica",
+      "color": "#5bcf7a",
+      "lineStyle": "solid",
+      "directed": true,
+      "description": "Indica que uma verificação confirma o atendimento de um requisito."
+    },
+    {
+      "id": "derives_from",
+      "index": 9,
+      "label": "Deriva de",
+      "color": "#c3e66e",
+      "lineStyle": "solid",
+      "directed": true,
+      "description": "Indica de que objetivo da missão, ou de que restrição, um requisito deriva."
+    }
+  ],
+  "entities": [
+    {
+      "id": "mission",
+      "name": "Missão DemoSat",
+      "category": "mission",
+      "step": 1,
+      "description": "Missão conceitual de observação da Terra com satélite de 30 kg em órbita baixa.",
+      "parameters": [
+        {
+          "id": "dry_mass",
+          "unit": "kg",
+          "name": "Massa seca (soma dos itens)",
+          "formula": "sum(total(\"mass\"))",
+          "source": "computed"
+        },
+        {
+          "id": "dry_mass_margined",
+          "unit": "kg",
+          "name": "Massa seca com margens ECSS",
+          "formula": "sum(total(\"mass\", \"margin\")) * 1.2",
+          "source": "computed",
+          "notes": "Margens por maturidade (5/10/20 %) mais 20 % de margem de sistema, fase 0/A."
+        },
+        {
+          "id": "power_all_on",
+          "unit": "W",
+          "name": "Consumo com tudo ligado",
+          "formula": "sum(total(\"power\"))",
+          "source": "computed"
+        },
+        {
+          "id": "generation_avg",
+          "unit": "W",
+          "name": "Geração média por órbita",
+          "formula": "eps.power_generation * (1 - mission.eclipse_fraction)",
+          "source": "computed"
+        },
+        {
+          "id": "eclipse_fraction",
+          "unit": "-",
+          "name": "Fração de eclipse (pior caso)",
+          "formula": "engine.orbit_eclipse_max_fraction",
+          "source": "computed",
+          "notes": "Pior caso geométrico (β = 0°) calculado pelo motor a partir de mission.orbit."
+        }
+      ]
+    },
+    {
+      "id": "obj_imaging",
+      "code": "OBJ-1",
+      "name": "Imagear regiões de interesse",
+      "category": "objective",
+      "parentId": "mission",
+      "step": 2,
+      "description": "Coletar imagens multiespectrais de regiões de interesse."
+    },
+    {
+      "id": "obj_data",
+      "code": "OBJ-2",
+      "name": "Entregar dados ao solo",
+      "category": "objective",
+      "parentId": "mission",
+      "step": 2,
+      "description": "Transmitir dados de missão para a estação solo."
+    },
+    {
+      "id": "obj_life",
+      "code": "OBJ-3",
+      "name": "Operar por 5 anos",
+      "category": "objective",
+      "parentId": "mission",
+      "step": 2,
+      "description": "Manter operação nominal em órbita baixa por 5 anos."
+    },
+    {
+      "id": "req_image",
+      "code": "REQ-001",
+      "name": "Capturar imagem",
+      "category": "requirement",
+      "step": 3,
+      "description": "O sistema deve capturar imagens multiespectrais da superfície terrestre com GSD ≤ 20 m.",
+      "requirement": {
+        "text": "O sistema deve capturar imagens multiespectrais da superfície terrestre com GSD menor ou igual a 20 m.",
+        "type": "performance",
+        "priority": "must",
+        "rationale": "Resolução mínima para identificar feições de interesse regional.",
+        "rule": "camera.gsd_m <= 20",
+        "verification": {
+          "method": "Test",
+          "level": "Subsystem"
+        }
+      }
+    },
+    {
+      "id": "req_downlink",
+      "code": "REQ-002",
+      "name": "Transmitir dados",
+      "category": "requirement",
+      "step": 3,
+      "description": "O sistema deve transmitir dados de missão para a estação solo via S-Band a ≥ 2 Mbps.",
+      "requirement": {
+        "text": "O sistema deve transmitir dados de missão para a estação solo em S-Band a pelo menos 2 Mbps.",
+        "type": "performance",
+        "priority": "must",
+        "rationale": "Volume diário de imagens compatível com o número de passes disponíveis.",
+        "rule": "ttc.data_rate_mbps >= 2",
+        "verification": {
+          "method": "Test",
+          "level": "System"
+        }
+      }
+    },
+    {
+      "id": "req_power",
+      "code": "REQ-003",
+      "name": "Autonomia elétrica",
+      "category": "requirement",
+      "step": 3,
+      "description": "O EPS deve manter o satélite operacional em eclipse por pelo menos 35 minutos.",
+      "requirement": {
+        "text": "O EPS deve manter o satélite operacional em eclipse por pelo menos 35 minutos sem exceder a profundidade de descarga máxima da bateria.",
+        "type": "functional",
+        "priority": "must",
+        "rationale": "Eclipse máximo na órbita heliossíncrona de 600 km, com β = 0 como pior caso.",
+        "rule": "battery.capacity_wh * battery.dod_max * battery.efficiency >= engine.mode_eclipse_w * engine.orbit_eclipse_max_min / 60",
+        "verification": {
+          "method": "Test",
+          "level": "Subsystem"
+        }
+      }
+    },
+    {
+      "id": "req_thermal",
+      "code": "REQ-004",
+      "name": "Faixa térmica",
+      "category": "requirement",
+      "step": 3,
+      "description": "Eletrônica deve operar dentro de -10 °C a +40 °C em todos os modos.",
+      "requirement": {
+        "text": "A eletrônica deve operar entre -10 °C e +40 °C em todos os modos.",
+        "type": "environmental",
+        "priority": "must",
+        "rule": "engine.thermal_cold_c >= t_min_c and engine.thermal_hot_c <= t_max_c",
+        "verification": {
+          "method": "Analysis",
+          "level": "Subsystem"
+        }
+      },
+      "parameters": [
+        {
+          "id": "t_min_c",
+          "name": "Temperatura mínima de operação",
+          "value": -10,
+          "unit": "°C"
+        },
+        {
+          "id": "t_max_c",
+          "name": "Temperatura máxima de operação",
+          "value": 40,
+          "unit": "°C"
+        }
+      ]
+    },
+    {
+      "id": "req_mass",
+      "code": "REQ-005",
+      "name": "Massa total",
+      "category": "requirement",
+      "step": 3,
+      "description": "A massa do satélite no lançamento deve ser menor ou igual a 30 kg; o budget soma as margens de maturidade e de sistema.",
+      "requirement": {
+        "text": "A massa do satélite no lançamento deve ser menor ou igual a 30 kg.",
+        "type": "constraint",
+        "priority": "must",
+        "rationale": "Envelope do lançador para a classe de 30 kg.",
+        "rule": "engine.budget_mass_total <= 30",
+        "verification": {
+          "method": "Rule",
+          "level": "System"
+        }
+      }
+    },
+    {
+      "id": "func_capture",
+      "name": "Capturar imagem",
+      "category": "function",
+      "step": 4,
+      "description": "Aquisição de imagem multiespectral pelo payload óptico."
+    },
+    {
+      "id": "func_transmit",
+      "name": "Transmitir dados",
+      "category": "function",
+      "step": 4,
+      "description": "Envio de dados de missão e telemetria ao segmento solo."
+    },
+    {
+      "id": "func_command",
+      "name": "Receber telecomando",
+      "category": "function",
+      "step": 4,
+      "description": "Recebimento e validação de comandos vindos do solo."
+    },
+    {
+      "id": "func_pwr_mgmt",
+      "name": "Gerenciar energia",
+      "category": "function",
+      "step": 4,
+      "description": "Geração, armazenamento e distribuição de energia elétrica."
+    },
+    {
+      "id": "func_thermal",
+      "name": "Controlar temperatura",
+      "category": "function",
+      "step": 4,
+      "description": "Manter a faixa térmica dos componentes críticos."
+    },
+    {
+      "id": "seg_space",
+      "name": "Segmento espacial",
+      "short": "SAT",
+      "category": "segment",
+      "parentId": "mission",
+      "step": 5,
+      "description": "Satélite DemoSat-TG de 30 kg em órbita heliossíncrona de 600 km; corpo de 0,40 × 0,40 × 0,45 m com duas asas solares girando em torno da normal à órbita.",
+      "parameters": [
+        {
+          "id": "mass",
+          "name": "Massa nominal do satélite",
+          "formula": "sum(children(\"seg_space\", \"mass\"))",
+          "unit": "kg"
+        },
+        {
+          "id": "bus_x_m",
+          "name": "Corpo: comprimento no sentido da velocidade",
+          "value": 0.4,
+          "unit": "m"
+        },
+        {
+          "id": "bus_y_m",
+          "name": "Corpo: largura na normal à órbita (eixo das asas)",
+          "value": 0.4,
+          "unit": "m"
+        },
+        {
+          "id": "bus_z_m",
+          "name": "Corpo: altura no sentido do nadir",
+          "value": 0.45,
+          "unit": "m"
+        },
+        {
+          "id": "drag_area_m2",
+          "name": "Área de arrasto média (face frontal + asas girando, média 2/π)",
+          "formula": "bus_y_m * bus_z_m + solar_array.area_m2 * 0.6366",
+          "unit": "m²"
+        },
+        {
+          "id": "sun_area_m2",
+          "name": "Área média do corpo voltada ao Sol (faces X e Z, média 2/π)",
+          "formula": "(bus_y_m * bus_z_m + bus_x_m * bus_y_m) * 0.6366",
+          "unit": "m²"
+        },
+        {
+          "id": "nadir_area_m2",
+          "name": "Área voltada à Terra (face nadir)",
+          "formula": "bus_x_m * bus_y_m",
+          "unit": "m²"
+        },
+        {
+          "id": "y_face_area_m2",
+          "name": "Área de uma face ±Y (onde cabe o radiador)",
+          "formula": "bus_x_m * bus_z_m",
+          "unit": "m²"
+        },
+        {
+          "id": "heat_capacity_j_k",
+          "name": "Capacidade térmica (massa nominal × 900 J/kg·K, alumínio)",
+          "formula": "mass * 900",
+          "unit": "J/K"
+        }
+      ]
+    },
+    {
+      "id": "seg_ground",
+      "name": "Segmento solo",
+      "short": "SOLO",
+      "category": "segment",
+      "parentId": "mission",
+      "step": 5,
+      "description": "Estação terrena do ITA, controle da missão e processamento das imagens."
+    },
+    {
+      "id": "seg_launch",
+      "name": "Segmento de lançamento",
+      "short": "LAN",
+      "category": "segment",
+      "parentId": "mission",
+      "step": 5,
+      "description": "Lançamento compartilhado (rideshare) para órbita heliossíncrona; o satélite se separa por uma interface mecânica padronizada."
+    },
+    {
+      "id": "payload",
+      "name": "Payload óptico",
+      "short": "PLD",
+      "category": "subsystem",
+      "subsystem": "Payload",
+      "step": 6,
+      "description": "Carga útil responsável pela aquisição de imagens.",
+      "budgets": [
+        {
+          "kind": "mass",
+          "allocated": 6,
+          "estimated": 5.6,
+          "unit": "kg"
+        },
+        {
+          "kind": "power",
+          "allocated": 22,
+          "estimated": 18,
+          "unit": "W"
+        }
+      ],
+      "parameters": [
+        {
+          "id": "mass",
+          "unit": "kg",
+          "name": "Massa",
+          "formula": "sum(children(\"payload\", \"mass\"))"
+        },
+        {
+          "id": "power",
+          "unit": "W",
+          "name": "Consumo em imageamento",
+          "value": 18,
+          "maturity": "new"
+        }
+      ],
+      "parentId": "seg_space"
+    },
+    {
+      "id": "eps",
+      "name": "Subsistema de potência",
+      "short": "EPS",
+      "category": "subsystem",
+      "subsystem": "EPS",
+      "step": 6,
+      "description": "Painéis solares, bateria de íons de lítio e PCDU regulando 28 V.",
+      "budgets": [
+        {
+          "kind": "mass",
+          "allocated": 4,
+          "estimated": 3.2,
+          "unit": "kg"
+        },
+        {
+          "kind": "power",
+          "allocated": 60,
+          "estimated": 56,
+          "unit": "W"
+        }
+      ],
+      "parameters": [
+        {
+          "id": "mass",
+          "unit": "kg",
+          "name": "Massa",
+          "formula": "sum(children(\"eps\", \"mass\"))"
+        },
+        {
+          "id": "power",
+          "unit": "W",
+          "name": "Consumo próprio (PCDU)",
+          "value": 2,
+          "maturity": "cots"
+        },
+        {
+          "id": "power_generation",
+          "unit": "W",
+          "name": "Geração ao Sol no fim de vida",
+          "formula": "solar_array.area_m2 * 1361 * solar_array.cell_efficiency * solar_array.inherent_degradation * cosd(engine.orbit_beta_deg) * (1 - solar_array.degradation_per_year) ^ engine.mission_lifetime_years",
+          "notes": "SMAD: P = A·S·η·I_d·cos θ·(1 − D)^anos; asas girando em torno da normal à órbita, então θ = β."
+        }
+      ],
+      "parentId": "seg_space"
+    },
+    {
+      "id": "obc",
+      "name": "Computador de bordo",
+      "short": "OBC",
+      "category": "subsystem",
+      "subsystem": "OBC",
+      "step": 6,
+      "description": "Computador principal, mass memory e FDIR software.",
+      "budgets": [
+        {
+          "kind": "mass",
+          "allocated": 1.5,
+          "estimated": 1.1,
+          "unit": "kg"
+        },
+        {
+          "kind": "power",
+          "allocated": 9,
+          "estimated": 7,
+          "unit": "W"
+        }
+      ],
+      "parameters": [
+        {
+          "id": "mass",
+          "unit": "kg",
+          "name": "Massa",
+          "value": 1.1,
+          "maturity": "cots"
+        },
+        {
+          "id": "power",
+          "unit": "W",
+          "name": "Consumo nominal",
+          "value": 7,
+          "maturity": "cots"
+        }
+      ],
+      "parentId": "seg_space"
+    },
+    {
+      "id": "ttc",
+      "name": "Comunicações",
+      "short": "TT&C",
+      "category": "subsystem",
+      "subsystem": "TTC",
+      "step": 6,
+      "description": "Transceptor S-Band, diplexer e antena para uplink/downlink.",
+      "budgets": [
+        {
+          "kind": "mass",
+          "allocated": 1.8,
+          "estimated": 1.4,
+          "unit": "kg"
+        },
+        {
+          "kind": "power",
+          "allocated": 14,
+          "estimated": 12,
+          "unit": "W"
+        }
+      ],
+      "parameters": [
+        {
+          "id": "mass",
+          "unit": "kg",
+          "name": "Massa",
+          "formula": "sum(children(\"ttc\", \"mass\"))"
+        },
+        {
+          "id": "power",
+          "unit": "W",
+          "name": "Consumo em transmissão",
+          "value": 12,
+          "maturity": "cots"
+        },
+        {
+          "id": "power_idle",
+          "unit": "W",
+          "name": "Consumo em recepção",
+          "value": 3,
+          "maturity": "cots"
+        },
+        {
+          "id": "data_rate_mbps",
+          "unit": "Mbps",
+          "name": "Taxa de downlink",
+          "formula": "transceiver.data_rate_mbps"
+        }
+      ],
+      "parentId": "seg_space"
+    },
+    {
+      "id": "adcs",
+      "name": "Controle de atitude",
+      "short": "ADCS",
+      "category": "subsystem",
+      "subsystem": "ADCS",
+      "step": 6,
+      "description": "Star tracker, sun sensors, IMU, reaction wheels e magnetorquers.",
+      "budgets": [
+        {
+          "kind": "mass",
+          "allocated": 3.5,
+          "estimated": 2.8,
+          "unit": "kg"
+        },
+        {
+          "kind": "power",
+          "allocated": 12,
+          "estimated": 10,
+          "unit": "W"
+        }
+      ],
+      "parameters": [
+        {
+          "id": "mass",
+          "unit": "kg",
+          "name": "Massa",
+          "value": 2.8,
+          "maturity": "modified"
+        },
+        {
+          "id": "power",
+          "unit": "W",
+          "name": "Consumo nominal",
+          "value": 10,
+          "maturity": "modified"
+        },
+        {
+          "id": "pointing_accuracy_deg",
+          "unit": "deg",
+          "name": "Precisão de apontamento",
+          "value": 0.1,
+          "source": "reference"
+        }
+      ],
+      "parentId": "seg_space"
+    },
+    {
+      "id": "thermal",
+      "name": "Controle térmico",
+      "short": "TCS",
+      "category": "subsystem",
+      "subsystem": "THERMAL",
+      "step": 6,
+      "description": "Radiadores, MLI e heaters para controle térmico passivo/ativo.",
+      "budgets": [
+        {
+          "kind": "mass",
+          "allocated": 2,
+          "estimated": 1.7,
+          "unit": "kg"
+        },
+        {
+          "kind": "power",
+          "allocated": 8,
+          "estimated": 6,
+          "unit": "W"
+        }
+      ],
+      "parameters": [
+        {
+          "id": "mass",
+          "unit": "kg",
+          "name": "Massa",
+          "value": 1.7,
+          "maturity": "new"
+        },
+        {
+          "id": "power",
+          "unit": "W",
+          "name": "Consumo (heaters)",
+          "value": 6,
+          "maturity": "new"
+        },
+        {
+          "id": "radiator_area_m2",
+          "name": "Área do radiador (face −Y, que não vê o Sol)",
+          "value": 0.18,
+          "unit": "m²",
+          "max": 0.18
+        }
+      ],
+      "parentId": "seg_space"
+    },
+    {
+      "id": "structure",
+      "name": "Estrutura",
+      "short": "STR",
+      "category": "subsystem",
+      "subsystem": "STRUCTURE",
+      "step": 6,
+      "description": "Estrutura mecânica primária do satélite em alumínio aeroespacial.",
+      "budgets": [
+        {
+          "kind": "mass",
+          "allocated": 6,
+          "estimated": 5.9,
+          "unit": "kg"
+        }
+      ],
+      "parameters": [
+        {
+          "id": "mass",
+          "unit": "kg",
+          "name": "Massa",
+          "value": 5.9,
+          "maturity": "modified"
+        }
+      ],
+      "parentId": "seg_space"
+    },
+    {
+      "id": "gs_ita",
+      "name": "Estação terrena ITA",
+      "short": "EST",
+      "category": "subsystem",
+      "parentId": "seg_ground",
+      "step": 6,
+      "description": "Antena parabólica de 3 m em banda S e receptor em São José dos Campos; elevação mínima de 10°.",
+      "parameters": [
+        {
+          "id": "rx_gain_dbi",
+          "value": 34.2,
+          "unit": "dBi",
+          "name": "Ganho da antena de recepção"
+        },
+        {
+          "id": "system_noise_temp_k",
+          "value": 250,
+          "unit": "K",
+          "name": "Temperatura de ruído do sistema"
+        }
+      ]
+    },
+    {
+      "id": "solar_array",
+      "name": "Painéis solares",
+      "category": "component",
+      "parentId": "eps",
+      "subsystem": "EPS",
+      "step": 7,
+      "description": "Geração primária de energia, 4 painéis de GaAs triple-junction.",
+      "parameters": [
+        {
+          "id": "mass",
+          "unit": "kg",
+          "name": "Massa",
+          "value": 1.2,
+          "maturity": "cots"
+        },
+        {
+          "id": "area_m2",
+          "unit": "m²",
+          "name": "Área total de células",
+          "value": 0.3,
+          "source": "reference"
+        },
+        {
+          "id": "cell_efficiency",
+          "unit": "-",
+          "name": "Eficiência das células (tripla junção)",
+          "value": 0.28,
+          "source": "reference"
+        },
+        {
+          "id": "inherent_degradation",
+          "unit": "-",
+          "name": "Degradação inerente (montagem, temperatura, sombras)",
+          "value": 0.77,
+          "source": "reference"
+        },
+        {
+          "id": "degradation_per_year",
+          "unit": "-",
+          "name": "Degradação por ano em órbita",
+          "value": 0.0275,
+          "source": "reference"
+        }
+      ]
+    },
+    {
+      "id": "battery",
+      "name": "Bateria Li-ion",
+      "category": "component",
+      "parentId": "eps",
+      "subsystem": "EPS",
+      "step": 7,
+      "description": "Armazenamento de energia para operação durante eclipse.",
+      "parameters": [
+        {
+          "id": "mass",
+          "unit": "kg",
+          "name": "Massa",
+          "value": 1.5,
+          "maturity": "cots"
+        },
+        {
+          "id": "capacity_wh",
+          "unit": "Wh",
+          "name": "Capacidade",
+          "value": 84,
+          "source": "reference",
+          "min": 50
+        },
+        {
+          "id": "dod_max",
+          "unit": "-",
+          "name": "Profundidade de descarga máxima",
+          "value": 0.3,
+          "source": "reference"
+        },
+        {
+          "id": "efficiency",
+          "unit": "-",
+          "name": "Eficiência de descarga",
+          "value": 0.9,
+          "source": "reference"
+        }
+      ]
+    },
+    {
+      "id": "pcdu",
+      "name": "PCDU",
+      "category": "component",
+      "parentId": "eps",
+      "subsystem": "EPS",
+      "step": 7,
+      "description": "Unidade de controle e distribuição de potência (barramento regulado de 28 V).",
+      "parameters": [
+        {
+          "id": "mass",
+          "unit": "kg",
+          "name": "Massa",
+          "value": 0.5,
+          "maturity": "cots"
+        },
+        {
+          "id": "bus_voltage_v",
+          "unit": "V",
+          "name": "Tensão do barramento",
+          "value": 28,
+          "source": "reference"
+        }
+      ]
+    },
+    {
+      "id": "camera",
+      "name": "Câmera multiespectral",
+      "category": "component",
+      "parentId": "payload",
+      "subsystem": "Payload",
+      "step": 7,
+      "description": "Sensor principal da missão, 6 bandas espectrais, GSD 20 m.",
+      "parameters": [
+        {
+          "id": "mass",
+          "unit": "kg",
+          "name": "Massa",
+          "value": 5.6,
+          "maturity": "new"
+        },
+        {
+          "id": "pixel_pitch_um",
+          "unit": "µm",
+          "name": "Passo do pixel do detector",
+          "value": 5.5,
+          "source": "reference"
+        },
+        {
+          "id": "focal_length_mm",
+          "unit": "mm",
+          "name": "Distância focal da óptica",
+          "value": 170,
+          "source": "estimated"
+        },
+        {
+          "id": "gsd_m",
+          "unit": "m",
+          "name": "GSD no nadir",
+          "formula": "pixel_pitch_um * 1e-6 * engine.orbit_altitude_km * 1000 / (focal_length_mm * 1e-3)",
+          "notes": "Resolução espacial no nadir: passo do pixel × altitude / focal."
+        },
+        {
+          "id": "data_rate_mbps",
+          "unit": "Mbps",
+          "name": "Geração de dados ao imagear",
+          "value": 8,
+          "source": "reference"
+        },
+        {
+          "id": "duty_fraction",
+          "name": "Ciclo de trabalho da câmera (fração do dia imageando)",
+          "value": 0.003,
+          "unit": "-"
+        }
+      ]
+    },
+    {
+      "id": "antenna",
+      "name": "Antena S-Band",
+      "category": "component",
+      "parentId": "ttc",
+      "subsystem": "TTC",
+      "step": 7,
+      "description": "Antena patch dual-polarização para uplink e downlink.",
+      "parameters": [
+        {
+          "id": "mass",
+          "unit": "kg",
+          "name": "Massa",
+          "value": 0.3,
+          "maturity": "cots"
+        },
+        {
+          "id": "gain_dbi",
+          "unit": "dBi",
+          "name": "Ganho",
+          "value": 6,
+          "source": "reference"
+        }
+      ]
+    },
+    {
+      "id": "transceiver",
+      "name": "Transceptor S-Band",
+      "category": "component",
+      "parentId": "ttc",
+      "subsystem": "TTC",
+      "step": 7,
+      "description": "Transceptor S-Band (2,2 GHz) com 2 W de RF; downlink a 2,4 Mbps.",
+      "parameters": [
+        {
+          "id": "mass",
+          "unit": "kg",
+          "name": "Massa",
+          "value": 1.1,
+          "maturity": "cots"
+        },
+        {
+          "id": "tx_power_w",
+          "unit": "W",
+          "name": "Potência RF de transmissão",
+          "value": 2,
+          "source": "reference"
+        },
+        {
+          "id": "data_rate_mbps",
+          "unit": "Mbps",
+          "name": "Taxa de downlink",
+          "value": 2.4,
+          "source": "reference"
+        },
+        {
+          "id": "frequency_ghz",
+          "unit": "GHz",
+          "name": "Frequência",
+          "value": 2.2,
+          "source": "reference"
+        }
+      ]
+    },
+    {
+      "id": "rw_set",
+      "name": "Reaction wheels (3)",
+      "category": "component",
+      "parentId": "adcs",
+      "subsystem": "ADCS",
+      "step": 7,
+      "description": "Conjunto de 3 reaction wheels para controle 3-eixos.",
+      "parameters": [
+        {
+          "id": "mass",
+          "unit": "kg",
+          "name": "Massa",
+          "value": 2.8,
+          "maturity": "modified"
+        }
+      ]
+    },
+    {
+      "id": "ver_image_test",
+      "name": "Teste funcional de imagem",
+      "category": "verification",
+      "step": 10,
+      "description": "Teste funcional do payload em câmara para verificar aquisição da imagem.",
+      "status": "planned",
+      "metadata": {
+        "method": "Test",
+        "level": "Subsystem"
+      }
+    },
+    {
+      "id": "ver_downlink",
+      "name": "Teste de downlink",
+      "category": "verification",
+      "step": 10,
+      "description": "Teste end-to-end de downlink S-Band com a estação solo.",
+      "status": "in_progress",
+      "metadata": {
+        "method": "Test",
+        "level": "System"
+      }
+    },
+    {
+      "id": "ver_thermal",
+      "name": "Análise térmica",
+      "category": "verification",
+      "step": 10,
+      "description": "Análise térmica em pior caso (eclipse longo / iluminação máxima) para validar a faixa.",
+      "status": "passed",
+      "metadata": {
+        "method": "Analysis",
+        "level": "Subsystem"
+      }
+    },
+    {
+      "id": "ver_power",
+      "name": "Teste em vácuo térmico (EPS)",
+      "category": "verification",
+      "step": 10,
+      "description": "Teste de capacidade da bateria em ciclos eclipse/sol com cargas representativas.",
+      "status": "planned",
+      "metadata": {
+        "method": "Test",
+        "level": "Subsystem"
+      }
+    }
+  ],
+  "relations": [
+    {
+      "id": "rel_capture_req",
+      "type": "allocated_to",
+      "source": "req_image",
+      "target": "func_capture",
+      "label": "REQ-001 → função capturar",
+      "step": 4,
+      "reviewed": {
+        "source": "78771b37",
+        "target": "84df4ed4",
+        "at": "2026-10-18"
+      }
+    },
+    {
+      "id": "rel_transmit_req",
+      "type": "allocated_to",
+      "source": "req_downlink",
+      "target": "func_transmit",
+      "label": "REQ-002 → função transmitir",
+      "step": 4,
+      "reviewed": {
+        "source": "38fb8e91",
+        "target": "d4e8ccc2",
+        "at": "2026-10-18"
+      }
+    },
+    {
+      "id": "rel_command_req",
+      "type": "allocated_to",
+      "source": "req_downlink",
+      "target": "func_command",
+      "label": "REQ-002 → função comando",
+      "step": 4,
+      "reviewed": {
+        "source": "38fb8e91",
+        "target": "19097c9d",
+        "at": "2026-10-18"
+      }
+    },
+    {
+      "id": "rel_power_req",
+      "type": "allocated_to",
+      "source": "req_power",
+      "target": "func_pwr_mgmt",
+      "label": "REQ-003 → função energia",
+      "step": 4,
+      "reviewed": {
+        "source": "4dd75627",
+        "target": "6fcde90b",
+        "at": "2026-10-19"
+      }
+    },
+    {
+      "id": "rel_thermal_req",
+      "type": "allocated_to",
+      "source": "req_thermal",
+      "target": "func_thermal",
+      "label": "REQ-004 → função térmica",
+      "step": 4,
+      "reviewed": {
+        "source": "94f7333e",
+        "target": "8c257be1",
+        "at": "2026-10-18"
+      }
+    },
+    {
+      "id": "rel_func_capture_pl",
+      "type": "allocated_to",
+      "source": "func_capture",
+      "target": "payload",
+      "label": "Função capturar → Payload",
+      "step": 6,
+      "reviewed": {
+        "source": "84df4ed4",
+        "target": "6905b63f",
+        "at": "2026-10-18"
+      }
+    },
+    {
+      "id": "rel_func_trans_ttc",
+      "type": "allocated_to",
+      "source": "func_transmit",
+      "target": "ttc",
+      "label": "Função transmitir → TT&C",
+      "step": 6,
+      "reviewed": {
+        "source": "d4e8ccc2",
+        "target": "3bfe0ce4",
+        "at": "2026-10-18"
+      }
+    },
+    {
+      "id": "rel_func_cmd_obc",
+      "type": "allocated_to",
+      "source": "func_command",
+      "target": "obc",
+      "label": "Função comando → OBC",
+      "step": 6,
+      "reviewed": {
+        "source": "19097c9d",
+        "target": "808ec4bc",
+        "at": "2026-10-18"
+      }
+    },
+    {
+      "id": "rel_func_pwr_eps",
+      "type": "allocated_to",
+      "source": "func_pwr_mgmt",
+      "target": "eps",
+      "label": "Função energia → EPS",
+      "step": 6,
+      "reviewed": {
+        "source": "6fcde90b",
+        "target": "d82b0eca",
+        "at": "2026-10-19"
+      }
+    },
+    {
+      "id": "rel_func_thermal_th",
+      "type": "allocated_to",
+      "source": "func_thermal",
+      "target": "thermal",
+      "label": "Função térmica → Subsistema térmico",
+      "step": 6,
+      "reviewed": {
+        "source": "8c257be1",
+        "target": "0c6386d7",
+        "at": "2026-10-18"
+      }
+    },
+    {
+      "id": "rel_eps_obc_power",
+      "type": "provides_power_to",
+      "source": "eps",
+      "target": "obc",
+      "label": "Barramento 28 V regulado",
+      "step": 8,
+      "criticality": "high"
+    },
+    {
+      "id": "rel_eps_pl_power",
+      "type": "provides_power_to",
+      "source": "eps",
+      "target": "payload",
+      "label": "Alimentação do payload",
+      "step": 8,
+      "criticality": "high"
+    },
+    {
+      "id": "rel_eps_ttc_power",
+      "type": "provides_power_to",
+      "source": "eps",
+      "target": "ttc",
+      "label": "Alimentação TT&C",
+      "step": 8,
+      "criticality": "high"
+    },
+    {
+      "id": "rel_eps_adcs_power",
+      "type": "provides_power_to",
+      "source": "eps",
+      "target": "adcs",
+      "label": "Alimentação ADCS",
+      "step": 8,
+      "criticality": "medium"
+    },
+    {
+      "id": "rel_eps_thermal_pwr",
+      "type": "provides_power_to",
+      "source": "eps",
+      "target": "thermal",
+      "label": "Alimentação heaters",
+      "step": 8,
+      "criticality": "medium"
+    },
+    {
+      "id": "rel_pl_obc_data",
+      "type": "sends_data_to",
+      "source": "payload",
+      "target": "obc",
+      "label": "Imagem bruta",
+      "step": 8,
+      "criticality": "high"
+    },
+    {
+      "id": "rel_obc_ttc_data",
+      "type": "sends_data_to",
+      "source": "obc",
+      "target": "ttc",
+      "label": "Pacotes de telemetria",
+      "step": 8,
+      "criticality": "high"
+    },
+    {
+      "id": "rel_adcs_obc_data",
+      "type": "sends_data_to",
+      "source": "adcs",
+      "target": "obc",
+      "label": "Estado de atitude",
+      "step": 8,
+      "criticality": "medium"
+    },
+    {
+      "id": "rel_thermal_obc",
+      "type": "sends_data_to",
+      "source": "thermal",
+      "target": "obc",
+      "label": "Telemetria térmica",
+      "step": 8
+    },
+    {
+      "id": "rel_ttc_obc_cmd",
+      "type": "sends_command_to",
+      "source": "ttc",
+      "target": "obc",
+      "label": "Telecomandos validados",
+      "step": 8,
+      "criticality": "high"
+    },
+    {
+      "id": "rel_obc_adcs_cmd",
+      "type": "sends_command_to",
+      "source": "obc",
+      "target": "adcs",
+      "label": "Comandos de atitude",
+      "step": 8,
+      "criticality": "high"
+    },
+    {
+      "id": "rel_obc_pl_cmd",
+      "type": "sends_command_to",
+      "source": "obc",
+      "target": "payload",
+      "label": "Comando de aquisição",
+      "step": 8
+    },
+    {
+      "id": "rel_pl_str_mech",
+      "type": "mechanically_attached_to",
+      "source": "payload",
+      "target": "structure",
+      "label": "Fixação no deck superior",
+      "step": 8
+    },
+    {
+      "id": "rel_eps_str_mech",
+      "type": "mechanically_attached_to",
+      "source": "eps",
+      "target": "structure",
+      "label": "Fixação no deck lateral",
+      "step": 8
+    },
+    {
+      "id": "rel_obc_str_mech",
+      "type": "mechanically_attached_to",
+      "source": "obc",
+      "target": "structure",
+      "label": "Fixação no deck central",
+      "step": 8
+    },
+    {
+      "id": "rel_ttc_str_mech",
+      "type": "mechanically_attached_to",
+      "source": "ttc",
+      "target": "structure",
+      "label": "Fixação no deck inferior",
+      "step": 8
+    },
+    {
+      "id": "rel_adcs_str_mech",
+      "type": "mechanically_attached_to",
+      "source": "adcs",
+      "target": "structure",
+      "label": "Fixação no deck inferior",
+      "step": 8
+    },
+    {
+      "id": "rel_th_str_mech",
+      "type": "mechanically_attached_to",
+      "source": "thermal",
+      "target": "structure",
+      "label": "Radiadores e MLI fixados",
+      "step": 8
+    },
+    {
+      "id": "rel_ant_ttc_mech",
+      "type": "mechanically_attached_to",
+      "source": "antenna",
+      "target": "ttc",
+      "label": "Antena montada no transceptor",
+      "step": 8
+    },
+    {
+      "id": "rel_rw_adcs_mech",
+      "type": "mechanically_attached_to",
+      "source": "rw_set",
+      "target": "adcs",
+      "label": "Reaction wheels no bloco ADCS",
+      "step": 8
+    },
+    {
+      "id": "rel_pl_thermal",
+      "type": "thermally_coupled_to",
+      "source": "payload",
+      "target": "thermal",
+      "label": "Caminho térmico do detector",
+      "step": 8,
+      "criticality": "medium"
+    },
+    {
+      "id": "rel_obc_thermal",
+      "type": "thermally_coupled_to",
+      "source": "obc",
+      "target": "thermal",
+      "label": "Caminho térmico do OBC",
+      "step": 8
+    },
+    {
+      "id": "rel_eps_thermal_t",
+      "type": "thermally_coupled_to",
+      "source": "battery",
+      "target": "thermal",
+      "label": "Heater dedicado da bateria",
+      "step": 8,
+      "criticality": "high"
+    },
+    {
+      "id": "rel_solar_battery",
+      "type": "provides_power_to",
+      "source": "solar_array",
+      "target": "battery",
+      "label": "Carga da bateria via SAR",
+      "step": 8,
+      "criticality": "high"
+    },
+    {
+      "id": "rel_battery_pcdu",
+      "type": "provides_power_to",
+      "source": "battery",
+      "target": "pcdu",
+      "label": "Barra primária 28 V",
+      "step": 8,
+      "criticality": "high"
+    },
+    {
+      "id": "rel_camera_obc_data",
+      "type": "sends_data_to",
+      "source": "camera",
+      "target": "obc",
+      "label": "Pixels brutos do sensor",
+      "step": 8,
+      "criticality": "high"
+    },
+    {
+      "id": "rel_pl_satisfies",
+      "type": "satisfies",
+      "source": "payload",
+      "target": "req_image",
+      "label": "Payload satisfaz REQ-001",
+      "step": 9,
+      "reviewed": {
+        "source": "6905b63f",
+        "target": "78771b37",
+        "at": "2026-10-18"
+      }
+    },
+    {
+      "id": "rel_ttc_satisfies",
+      "type": "satisfies",
+      "source": "ttc",
+      "target": "req_downlink",
+      "label": "TT&C satisfaz REQ-002",
+      "step": 9,
+      "reviewed": {
+        "source": "3bfe0ce4",
+        "target": "38fb8e91",
+        "at": "2026-10-18"
+      }
+    },
+    {
+      "id": "rel_eps_satisfies",
+      "type": "satisfies",
+      "source": "eps",
+      "target": "req_power",
+      "label": "EPS satisfaz REQ-003",
+      "step": 9,
+      "reviewed": {
+        "source": "d82b0eca",
+        "target": "4dd75627",
+        "at": "2026-10-19"
+      }
+    },
+    {
+      "id": "rel_thermal_satisfies",
+      "type": "satisfies",
+      "source": "thermal",
+      "target": "req_thermal",
+      "label": "Subsist. térmico satisfaz REQ-004",
+      "step": 9,
+      "reviewed": {
+        "source": "0c6386d7",
+        "target": "94f7333e",
+        "at": "2026-10-18"
+      }
+    },
+    {
+      "id": "rel_ver_image",
+      "type": "verifies",
+      "source": "ver_image_test",
+      "target": "req_image",
+      "label": "Verifica REQ-001",
+      "step": 10,
+      "reviewed": {
+        "source": "ed12a597",
+        "target": "78771b37",
+        "at": "2026-10-18"
+      }
+    },
+    {
+      "id": "rel_ver_downlink",
+      "type": "verifies",
+      "source": "ver_downlink",
+      "target": "req_downlink",
+      "label": "Verifica REQ-002",
+      "step": 10,
+      "reviewed": {
+        "source": "4c2197b3",
+        "target": "38fb8e91",
+        "at": "2026-10-18"
+      }
+    },
+    {
+      "id": "rel_ver_power_r",
+      "type": "verifies",
+      "source": "ver_power",
+      "target": "req_power",
+      "label": "Verifica REQ-003",
+      "step": 10,
+      "reviewed": {
+        "source": "e6f08112",
+        "target": "4dd75627",
+        "at": "2026-10-19"
+      }
+    },
+    {
+      "id": "rel_ver_thermal",
+      "type": "verifies",
+      "source": "ver_thermal",
+      "target": "req_thermal",
+      "label": "Verifica REQ-004",
+      "step": 10,
+      "reviewed": {
+        "source": "946d3baa",
+        "target": "94f7333e",
+        "at": "2026-10-18"
+      }
+    },
+    {
+      "id": "rel_transceiver_antenna",
+      "type": "sends_data_to",
+      "source": "transceiver",
+      "target": "antenna",
+      "label": "RF 2,2 GHz, 2 W",
+      "step": 8,
+      "criticality": "high"
+    },
+    {
+      "id": "rel_satellite_req_mass",
+      "type": "satisfies",
+      "source": "seg_space",
+      "target": "req_mass",
+      "label": "Satélite satisfaz REQ-005",
+      "step": 9,
+      "reviewed": {
+        "source": "477f40ea",
+        "target": "a2a3a71d",
+        "at": "2026-10-19"
+      }
+    },
+    {
+      "id": "rel_req_image_obj",
+      "type": "derives_from",
+      "source": "req_image",
+      "target": "obj_imaging",
+      "label": "REQ-001 deriva de OBJ-1",
+      "step": 3,
+      "reviewed": {
+        "source": "78771b37",
+        "target": "57deca83",
+        "at": "2026-10-18"
+      }
+    },
+    {
+      "id": "rel_req_downlink_obj",
+      "type": "derives_from",
+      "source": "req_downlink",
+      "target": "obj_data",
+      "label": "REQ-002 deriva de OBJ-2",
+      "step": 3,
+      "reviewed": {
+        "source": "38fb8e91",
+        "target": "8d392a64",
+        "at": "2026-10-18"
+      }
+    },
+    {
+      "id": "rel_req_power_obj",
+      "type": "derives_from",
+      "source": "req_power",
+      "target": "obj_life",
+      "label": "REQ-003 deriva de OBJ-3",
+      "step": 3,
+      "reviewed": {
+        "source": "4dd75627",
+        "target": "f27b9876",
+        "at": "2026-10-19"
+      }
+    },
+    {
+      "id": "rel_req_thermal_obj",
+      "type": "derives_from",
+      "source": "req_thermal",
+      "target": "obj_life",
+      "label": "REQ-004 deriva de OBJ-3",
+      "step": 3,
+      "reviewed": {
+        "source": "94f7333e",
+        "target": "f27b9876",
+        "at": "2026-10-18"
+      }
+    },
+    {
+      "id": "rel_req_mass_launch",
+      "type": "derives_from",
+      "source": "req_mass",
+      "target": "seg_launch",
+      "label": "Restrição de massa do lançamento compartilhado",
+      "step": 5,
+      "reviewed": {
+        "source": "a2a3a71d",
+        "target": "75f2f781",
+        "at": "2026-10-18"
+      }
+    },
+    {
+      "id": "rel_gs_ttc_cmd",
+      "type": "sends_command_to",
+      "source": "gs_ita",
+      "target": "ttc",
+      "label": "Telecomando (uplink em banda S)",
+      "step": 8,
+      "criticality": "high"
+    },
+    {
+      "id": "rel_ant_gs_data",
+      "type": "sends_data_to",
+      "source": "antenna",
+      "target": "gs_ita",
+      "label": "Downlink em banda S, 2,4 Mbps",
+      "step": 8,
+      "criticality": "high"
+    },
+    {
+      "id": "rel_str_launch_mech",
+      "type": "mechanically_attached_to",
+      "source": "structure",
+      "target": "seg_launch",
+      "label": "Interface de separação com o lançador",
+      "step": 8,
+      "criticality": "high"
+    },
+    {
+      "id": "rel_gs_satisfies",
+      "type": "satisfies",
+      "source": "gs_ita",
+      "target": "req_downlink",
+      "label": "Estação satisfaz REQ-002",
+      "step": 9,
+      "reviewed": {
+        "source": "1c9cd4d1",
+        "target": "38fb8e91",
+        "at": "2026-10-18"
+      }
+    }
+  ],
+  "budgets": [
+    {
+      "id": "mass",
+      "label": "Massa seca",
+      "unit": "kg",
+      "kind": "mass",
+      "parameter": "mass",
+      "allocated": 30,
+      "systemMargin": 0.2,
+      "rootEntityId": "seg_space"
+    },
+    {
+      "id": "power",
+      "label": "Potência com tudo ligado",
+      "unit": "W",
+      "kind": "power",
+      "parameter": "power",
+      "allocated": 64,
+      "systemMargin": 0,
+      "rootEntityId": "seg_space"
+    }
+  ],
+  "verifications": [
+    {
+      "id": "vcrm_image",
+      "requirementId": "req_image",
+      "method": "Test",
+      "level": "Subsystem",
+      "status": "planned",
+      "itemId": "camera",
+      "verifierId": "ver_image_test",
+      "description": "Ensaio funcional do payload em câmara com alvo calibrado."
+    },
+    {
+      "id": "vcrm_downlink",
+      "requirementId": "req_downlink",
+      "method": "Test",
+      "level": "System",
+      "status": "in_progress",
+      "itemId": "ttc",
+      "verifierId": "ver_downlink",
+      "description": "Downlink ponta a ponta com a estação solo."
+    },
+    {
+      "id": "vcrm_power",
+      "requirementId": "req_power",
+      "method": "Test",
+      "level": "Subsystem",
+      "status": "planned",
+      "itemId": "battery",
+      "verifierId": "ver_power",
+      "description": "Ciclagem Sol/eclipse em vácuo térmico."
+    },
+    {
+      "id": "vcrm_thermal",
+      "requirementId": "req_thermal",
+      "method": "Analysis",
+      "level": "Subsystem",
+      "status": "passed",
+      "itemId": "thermal",
+      "verifierId": "ver_thermal",
+      "evidence": "Relatório de análise térmica DS-TH-001 rev. B."
+    },
+    {
+      "id": "vcrm_mass",
+      "requirementId": "req_mass",
+      "method": "Analysis",
+      "level": "System",
+      "status": "in_progress",
+      "itemId": "seg_space",
+      "description": "Budget de massa com margens até a CDR; pesagem do modelo de voo na aceitação."
+    }
+  ],
+  "risks": [
+    {
+      "id": "risk_payload_thermal",
+      "title": "Detector do payload fora da faixa térmica durante eclipse longo",
+      "probability": 3,
+      "impact": 4,
+      "mitigation": "Adicionar heater dedicado e aumentar capacidade da bateria.",
+      "status": "open",
+      "entityIds": [
+        "payload",
+        "thermal"
+      ],
+      "category": "technical"
+    },
+    {
+      "id": "risk_downlink_window",
+      "title": "Janela de downlink insuficiente para volume de dados",
+      "probability": 3,
+      "impact": 3,
+      "mitigation": "Compressão wavelet e priorização de cenas de interesse.",
+      "status": "mitigated",
+      "entityIds": [
+        "ttc",
+        "transceiver"
+      ],
+      "category": "technical"
+    },
+    {
+      "id": "risk_sa_deployment",
+      "title": "Falha na deploy dos painéis solares",
+      "probability": 2,
+      "impact": 5,
+      "mitigation": "Mecanismo redundante de mola + atuador pirotécnico, testes funcionais.",
+      "status": "mitigated",
+      "entityIds": [
+        "solar_array",
+        "eps"
+      ],
+      "category": "technical"
+    }
+  ],
+  "modes": [
+    {
+      "id": "safe",
+      "name": "Safe",
+      "description": "Sobrevivência: só computador, recepção de telecomando, atitude mínima e heaters.",
+      "durationFraction": 0,
+      "active": [
+        "obc",
+        "ttc",
+        "adcs",
+        "thermal",
+        "eps"
+      ],
+      "loads": [
+        {
+          "entityId": "obc",
+          "powerW": 5
+        },
+        {
+          "entityId": "ttc",
+          "parameterRef": "ttc.power_idle"
+        },
+        {
+          "entityId": "adcs",
+          "powerW": 4
+        },
+        {
+          "entityId": "thermal",
+          "parameterRef": "thermal.power"
+        }
+      ]
+    },
+    {
+      "id": "nominal",
+      "name": "Nominal",
+      "description": "Cruzeiro ao Sol: plataforma ligada, payload em espera.",
+      "durationFraction": "1 - engine.orbit_eclipse_max_fraction - engine.station_contact_fraction - camera.duty_fraction",
+      "active": [
+        "obc",
+        "ttc",
+        "adcs",
+        "thermal",
+        "eps"
+      ],
+      "loads": [
+        {
+          "entityId": "obc",
+          "parameterRef": "obc.power"
+        },
+        {
+          "entityId": "ttc",
+          "parameterRef": "ttc.power_idle"
+        },
+        {
+          "entityId": "adcs",
+          "parameterRef": "adcs.power"
+        },
+        {
+          "entityId": "thermal",
+          "parameterRef": "thermal.power"
+        },
+        {
+          "entityId": "eps",
+          "parameterRef": "eps.power"
+        }
+      ]
+    },
+    {
+      "id": "imaging",
+      "name": "Imageamento",
+      "description": "Payload capturando imagens sobre a região de interesse.",
+      "durationFraction": "camera.duty_fraction",
+      "active": [
+        "payload",
+        "camera",
+        "obc",
+        "ttc",
+        "adcs",
+        "thermal",
+        "eps"
+      ],
+      "loads": [
+        {
+          "entityId": "payload",
+          "parameterRef": "payload.power"
+        },
+        {
+          "entityId": "obc",
+          "parameterRef": "obc.power"
+        },
+        {
+          "entityId": "ttc",
+          "parameterRef": "ttc.power_idle"
+        },
+        {
+          "entityId": "adcs",
+          "parameterRef": "adcs.power"
+        },
+        {
+          "entityId": "thermal",
+          "parameterRef": "thermal.power"
+        },
+        {
+          "entityId": "eps",
+          "parameterRef": "eps.power"
+        }
+      ]
+    },
+    {
+      "id": "downlink",
+      "name": "Downlink",
+      "description": "Passe sobre a estação solo com o transmissor ligado.",
+      "durationFraction": "engine.station_contact_fraction",
+      "active": [
+        "obc",
+        "ttc",
+        "transceiver",
+        "antenna",
+        "adcs",
+        "thermal",
+        "eps"
+      ],
+      "loads": [
+        {
+          "entityId": "obc",
+          "parameterRef": "obc.power"
+        },
+        {
+          "entityId": "ttc",
+          "parameterRef": "ttc.power"
+        },
+        {
+          "entityId": "adcs",
+          "parameterRef": "adcs.power"
+        },
+        {
+          "entityId": "thermal",
+          "parameterRef": "thermal.power"
+        },
+        {
+          "entityId": "eps",
+          "parameterRef": "eps.power"
+        }
+      ]
+    },
+    {
+      "id": "eclipse",
+      "name": "Eclipse",
+      "description": "Sombra da Terra: bateria alimenta a plataforma, heaters em carga máxima.",
+      "durationFraction": "engine.orbit_eclipse_max_fraction",
+      "active": [
+        "obc",
+        "ttc",
+        "adcs",
+        "thermal",
+        "battery",
+        "eps"
+      ],
+      "loads": [
+        {
+          "entityId": "obc",
+          "parameterRef": "obc.power"
+        },
+        {
+          "entityId": "ttc",
+          "parameterRef": "ttc.power_idle"
+        },
+        {
+          "entityId": "adcs",
+          "parameterRef": "adcs.power"
+        },
+        {
+          "entityId": "thermal",
+          "powerW": 8
+        },
+        {
+          "entityId": "eps",
+          "parameterRef": "eps.power"
+        }
+      ]
+    }
+  ],
+  "views": {
+    "defaultStep": 10,
+    "maxStep": 10,
+    "layout2D": "layered",
+    "layout3D": "radial-fan"
+  }
+}

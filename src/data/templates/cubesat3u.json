@@ -1,0 +1,1999 @@
+{
+  "metadata": {
+    "projectName": "AmbSat-3U",
+    "version": "1.0.0",
+    "description": "Modelo inicial de um CubeSat 3U de monitoramento ambiental (câmera RGB + coleta IoT por LoRa). Use como ponto de partida: troque nomes, valores e a órbita.",
+    "schemaVersion": 2
+  },
+  "mission": {
+    "id": "mission_ambsat",
+    "name": "Missão AmbSat-3U: monitoramento ambiental",
+    "orbit": {
+      "altitudeKm": 550,
+      "inclinationDeg": 97.6,
+      "eccentricity": 0,
+      "ltanHours": 10.5,
+      "epoch": "2027-06-01T00:00:00Z"
+    },
+    "groundStations": [
+      {
+        "id": "gs_santa_maria",
+        "name": "Estação solo Santa Maria (INPE)",
+        "latDeg": -29.72,
+        "lonDeg": -53.72,
+        "altKm": 0.1,
+        "minElevationDeg": 10
+      }
+    ],
+    "lifetimeYears": 3,
+    "analysis": {
+      "link": {
+        "txPowerW": "sband.tx_power_w",
+        "txGainDbi": "antenna_s.gain_dbi",
+        "frequencyGHz": "sband.frequency_ghz",
+        "dataRateMbps": "sband.data_rate_mbps",
+        "rxGainDbi": "gs_sm.rx_gain_dbi",
+        "systemNoiseTempK": "gs_sm.system_noise_temp_k",
+        "requiredEbN0Db": 4.4
+      },
+      "power": {
+        "generationW": "eps.power_generation",
+        "batteryCapacityWh": "battery.capacity_wh",
+        "depthOfDischarge": "battery.dod_max",
+        "batteryEfficiency": "battery.efficiency",
+        "solarArrayAreaM2": "solar_array.area_m2",
+        "eclipseModeId": "eclipse"
+      },
+      "data": {
+        "sources": [
+          {
+            "entityId": "camera",
+            "rateMbps": "camera.data_rate_mbps",
+            "dutyFraction": 0.002
+          },
+          {
+            "entityId": "lora",
+            "rateMbps": 0.001,
+            "dutyFraction": 0.5
+          }
+        ],
+        "downlinkRateMbps": "sband.data_rate_mbps",
+        "storageCapacityMB": "obc.storage_mb"
+      },
+      "decay": {
+        "dragAreaM2": 0.034,
+        "dragCoefficient": 2.2,
+        "massKg": "engine.budget_mass_total",
+        "solarActivity": "mean"
+      },
+      "thermal": {
+        "absorptivity": 0.3,
+        "emissivity": 0.8,
+        "sunlitAreaM2": 0.03,
+        "radiatorAreaM2": 0.06,
+        "earthFacingAreaM2": 0.03,
+        "internalPowerW": "engine.orbit_average_power_w",
+        "tMinC": -30,
+        "tMaxC": 50
+      }
+    }
+  },
+  "categories": [
+    {
+      "id": "mission",
+      "label": "Missão",
+      "color": "#c4a6ff",
+      "shape2D": "hexagon",
+      "shape3D": "sphere",
+      "description": "Propósito de mais alto nível do sistema."
+    },
+    {
+      "id": "objective",
+      "label": "Objetivo",
+      "color": "#c3e66e",
+      "shape2D": "rounded",
+      "shape3D": "flatPanel",
+      "description": "Resultado que a missão precisa alcançar; os requisitos derivam dos objetivos."
+    },
+    {
+      "id": "requirement",
+      "label": "Requisito",
+      "color": "#82b1ff",
+      "shape2D": "document",
+      "shape3D": "flatPanel",
+      "description": "Condição que o sistema deve atender."
+    },
+    {
+      "id": "function",
+      "label": "Função",
+      "color": "#2fd1c4",
+      "shape2D": "rounded",
+      "shape3D": "capsule",
+      "description": "Capacidade lógica que o sistema executa."
+    },
+    {
+      "id": "segment",
+      "label": "Segmento",
+      "color": "#8fb6cc",
+      "shape2D": "group",
+      "shape3D": "box",
+      "description": "Primeiro nível da árvore de produto: segmentos espacial, solo e de lançamento."
+    },
+    {
+      "id": "subsystem",
+      "label": "Subsistema",
+      "color": "#5bcf7a",
+      "shape2D": "group",
+      "shape3D": "box",
+      "description": "Bloco físico/lógico principal do satélite."
+    },
+    {
+      "id": "component",
+      "label": "Componente",
+      "color": "#f2c14e",
+      "shape2D": "box",
+      "shape3D": "smallBox",
+      "description": "Elemento dentro de um subsistema."
+    },
+    {
+      "id": "verification",
+      "label": "Verificação",
+      "color": "#ff8ac2",
+      "shape2D": "check",
+      "shape3D": "diamond",
+      "description": "Atividade que comprova requisito atendido."
+    }
+  ],
+  "relationTypes": [
+    {
+      "id": "satisfies",
+      "index": 1,
+      "label": "Satisfaz requisito",
+      "color": "#82b1ff",
+      "lineStyle": "solid",
+      "directed": true,
+      "description": "Indica que uma função, subsistema ou componente satisfaz um requisito."
+    },
+    {
+      "id": "allocated_to",
+      "index": 2,
+      "label": "Alocado para",
+      "color": "#2fd1c4",
+      "lineStyle": "dashed",
+      "directed": true,
+      "description": "Indica alocação de requisito ou função para um elemento físico ou lógico."
+    },
+    {
+      "id": "provides_power_to",
+      "index": 3,
+      "label": "Fornece potência",
+      "color": "#f2c14e",
+      "lineStyle": "solid",
+      "directed": true,
+      "description": "Indica fornecimento de energia elétrica entre subsistemas ou componentes."
+    },
+    {
+      "id": "sends_data_to",
+      "index": 4,
+      "label": "Envia dados",
+      "color": "#5cd3f0",
+      "lineStyle": "solid",
+      "directed": true,
+      "description": "Indica fluxo de dados, telemetria ou payload data."
+    },
+    {
+      "id": "sends_command_to",
+      "index": 5,
+      "label": "Envia comando",
+      "color": "#b48cff",
+      "lineStyle": "dotted",
+      "directed": true,
+      "description": "Fluxo de telecomando, de quem comanda para quem executa."
+    },
+    {
+      "id": "mechanically_attached_to",
+      "index": 6,
+      "label": "Fixação mecânica",
+      "color": "#8c97a6",
+      "lineStyle": "solid",
+      "directed": false,
+      "description": "Indica acoplamento ou fixação estrutural."
+    },
+    {
+      "id": "thermally_coupled_to",
+      "index": 7,
+      "label": "Acoplamento térmico",
+      "color": "#ff8a65",
+      "lineStyle": "dashed",
+      "directed": false,
+      "description": "Indica troca ou acoplamento térmico relevante."
+    },
+    {
+      "id": "verifies",
+      "index": 8,
+      "label": "Verifica",
+      "color": "#5bcf7a",
+      "lineStyle": "solid",
+      "directed": true,
+      "description": "Indica que uma verificação confirma o atendimento de um requisito."
+    },
+    {
+      "id": "derives_from",
+      "index": 9,
+      "label": "Deriva de",
+      "color": "#c3e66e",
+      "lineStyle": "solid",
+      "directed": true,
+      "description": "Indica de que objetivo da missão, ou de que restrição, um requisito deriva."
+    }
+  ],
+  "entities": [
+    {
+      "id": "mission",
+      "name": "Missão AmbSat-3U: monitoramento ambiental",
+      "category": "mission",
+      "step": 1,
+      "description": "CubeSat 3U que fotografa áreas de interesse ambiental e recolhe mensagens de sensores remotos (IoT) via LoRa.",
+      "short": "AmbSat",
+      "parameters": [
+        {
+          "id": "dry_mass",
+          "unit": "kg",
+          "name": "Massa seca (soma dos itens)",
+          "formula": "sum(total(\"mass\"))",
+          "source": "computed"
+        },
+        {
+          "id": "dry_mass_margined",
+          "unit": "kg",
+          "name": "Massa seca com margens ECSS",
+          "formula": "sum(total(\"mass\", \"margin\")) * 1.2",
+          "source": "computed"
+        },
+        {
+          "id": "power_all_on",
+          "unit": "W",
+          "name": "Consumo com tudo ligado",
+          "formula": "sum(total(\"power\"))",
+          "source": "computed"
+        },
+        {
+          "id": "generation_avg",
+          "unit": "W",
+          "name": "Geração média por órbita",
+          "formula": "eps.power_generation * (1 - mission.eclipse_fraction)",
+          "source": "computed"
+        },
+        {
+          "id": "eclipse_fraction",
+          "unit": "-",
+          "name": "Fração de eclipse (pior caso)",
+          "formula": "engine.orbit_eclipse_max_fraction",
+          "source": "computed",
+          "notes": "Pior caso geométrico (β = 0°) calculado pelo motor a partir de mission.orbit."
+        }
+      ]
+    },
+    {
+      "id": "obj_imaging",
+      "code": "OBJ-1",
+      "name": "Fotografar áreas ambientais",
+      "category": "objective",
+      "parentId": "mission",
+      "step": 2,
+      "description": "Fotografar áreas de interesse ambiental com GSD de 60 m."
+    },
+    {
+      "id": "obj_iot",
+      "code": "OBJ-2",
+      "name": "Coletar mensagens IoT",
+      "category": "objective",
+      "parentId": "mission",
+      "step": 2,
+      "description": "Coletar mensagens de sensores remotos (IoT) via LoRa."
+    },
+    {
+      "id": "obj_life",
+      "code": "OBJ-3",
+      "name": "Operar por 3 anos",
+      "category": "objective",
+      "parentId": "mission",
+      "step": 2,
+      "description": "Operar por 3 anos em órbita heliossíncrona de 550 km."
+    },
+    {
+      "id": "req_image",
+      "name": "Imagens RGB de 60 m",
+      "category": "requirement",
+      "step": 3,
+      "description": "Fotografar áreas de interesse com GSD de até 60 m.",
+      "code": "REQ-001",
+      "short": "Imagens 60 m",
+      "requirement": {
+        "text": "O sistema deve adquirir imagens RGB da superfície com GSD menor ou igual a 60 m.",
+        "type": "performance",
+        "priority": "must",
+        "rationale": "Suficiente para detectar queimadas e desmatamento em escala regional.",
+        "rule": "camera.gsd_m <= 60",
+        "verification": {
+          "method": "Test",
+          "level": "Subsystem"
+        }
+      }
+    },
+    {
+      "id": "req_iot",
+      "name": "Coleta de mensagens IoT",
+      "category": "requirement",
+      "step": 3,
+      "description": "Receber ao menos 2 000 mensagens LoRa por dia.",
+      "code": "REQ-002",
+      "short": "IoT 2 000/dia",
+      "requirement": {
+        "text": "O sistema deve receber e armazenar pelo menos 2 000 mensagens LoRa de sensores remotos por dia.",
+        "type": "functional",
+        "priority": "must",
+        "rule": "lora.messages_per_day >= 2000",
+        "verification": {
+          "method": "Demonstration",
+          "level": "System"
+        }
+      }
+    },
+    {
+      "id": "req_downlink",
+      "name": "Downlink em S-band",
+      "category": "requirement",
+      "step": 3,
+      "description": "Transmitir dados de missão a pelo menos 1 Mbps.",
+      "code": "REQ-003",
+      "short": "Downlink 1 Mbps",
+      "requirement": {
+        "text": "O sistema deve transmitir os dados de missão para a estação solo em S-band a pelo menos 1 Mbps.",
+        "type": "performance",
+        "priority": "must",
+        "rule": "sband.data_rate_mbps >= 1",
+        "verification": {
+          "method": "Test",
+          "level": "System"
+        }
+      }
+    },
+    {
+      "id": "req_power",
+      "name": "Autonomia em eclipse",
+      "category": "requirement",
+      "step": 3,
+      "description": "Manter a operação durante o eclipse máximo.",
+      "code": "REQ-004",
+      "short": "Autonomia",
+      "requirement": {
+        "text": "O EPS deve manter o satélite em operação durante o eclipse máximo sem exceder a profundidade de descarga da bateria.",
+        "type": "functional",
+        "priority": "must",
+        "rule": "battery.capacity_wh * battery.dod_max * battery.efficiency >= engine.mode_eclipse_w * engine.orbit_eclipse_max_min / 60",
+        "verification": {
+          "method": "Analysis",
+          "level": "Subsystem"
+        }
+      }
+    },
+    {
+      "id": "req_mass",
+      "name": "Massa de 3U",
+      "category": "requirement",
+      "step": 3,
+      "description": "Massa total com margens dentro do envelope 3U.",
+      "code": "REQ-005",
+      "short": "Massa ≤ 4 kg",
+      "requirement": {
+        "text": "A massa do satélite no lançamento deve ser menor ou igual a 4,0 kg.",
+        "type": "constraint",
+        "priority": "must",
+        "rationale": "Envelope de massa do deployer 3U.",
+        "rule": "engine.budget_mass_total <= 4",
+        "verification": {
+          "method": "Rule",
+          "level": "System"
+        }
+      }
+    },
+    {
+      "id": "req_deorbit",
+      "name": "Reentrada em 25 anos",
+      "category": "requirement",
+      "step": 3,
+      "description": "Cumprir a regra dos 25 anos sem propulsão.",
+      "code": "REQ-006",
+      "short": "Reentrada",
+      "requirement": {
+        "text": "O satélite deve reentrar naturalmente em menos de 25 anos após o fim da missão.",
+        "type": "constraint",
+        "priority": "must",
+        "rationale": "Diretriz IADC de mitigação de detritos.",
+        "verification": {
+          "method": "Analysis",
+          "level": "System"
+        }
+      }
+    },
+    {
+      "id": "func_image",
+      "name": "Adquirir imagens",
+      "category": "function",
+      "step": 4,
+      "description": "Capturar e comprimir imagens RGB.",
+      "code": "F-001"
+    },
+    {
+      "id": "func_collect",
+      "name": "Coletar mensagens IoT",
+      "category": "function",
+      "step": 4,
+      "description": "Receber, validar e armazenar pacotes LoRa.",
+      "code": "F-002"
+    },
+    {
+      "id": "func_downlink",
+      "name": "Transmitir dados",
+      "category": "function",
+      "step": 4,
+      "description": "Enviar imagens e mensagens à estação solo.",
+      "code": "F-003"
+    },
+    {
+      "id": "func_command",
+      "name": "Receber telecomandos",
+      "category": "function",
+      "step": 4,
+      "description": "Receber e executar comandos da estação solo.",
+      "code": "F-004"
+    },
+    {
+      "id": "func_power",
+      "name": "Gerar e armazenar energia",
+      "category": "function",
+      "step": 4,
+      "description": "Converter luz solar e gerir a bateria.",
+      "code": "F-005"
+    },
+    {
+      "id": "func_attitude",
+      "name": "Apontar o satélite",
+      "category": "function",
+      "step": 4,
+      "description": "Manter apontamento nadir para imagens e antenas.",
+      "code": "F-006"
+    },
+    {
+      "id": "seg_space",
+      "name": "Segmento espacial",
+      "short": "SAT",
+      "category": "segment",
+      "parentId": "mission",
+      "step": 5,
+      "description": "CubeSat 3U AmbSat em órbita heliossíncrona de 550 km."
+    },
+    {
+      "id": "seg_ground",
+      "name": "Segmento solo",
+      "short": "SOLO",
+      "category": "segment",
+      "parentId": "mission",
+      "step": 5,
+      "description": "Estação de Santa Maria (INPE) e controle da missão."
+    },
+    {
+      "id": "seg_launch",
+      "name": "Segmento de lançamento",
+      "short": "LAN",
+      "category": "segment",
+      "parentId": "mission",
+      "step": 5,
+      "description": "Lançamento compartilhado com dispenser 3U; o satélite corre nos trilhos do dispenser."
+    },
+    {
+      "id": "payload",
+      "name": "Carga útil",
+      "category": "subsystem",
+      "step": 6,
+      "description": "Câmera RGB e receptor LoRa.",
+      "short": "PLD",
+      "subsystem": "PLD",
+      "parameters": [
+        {
+          "id": "mass",
+          "unit": "kg",
+          "name": "Massa",
+          "formula": "sum(children(\"payload\", \"mass\"))"
+        },
+        {
+          "id": "power",
+          "unit": "W",
+          "name": "Consumo",
+          "formula": "sum(children(\"payload\", \"power\"))"
+        }
+      ],
+      "parentId": "seg_space"
+    },
+    {
+      "id": "eps",
+      "name": "Subsistema de potência",
+      "category": "subsystem",
+      "step": 6,
+      "description": "Painéis dobráveis, bateria Li-ion e placa EPS.",
+      "short": "EPS",
+      "subsystem": "EPS",
+      "parameters": [
+        {
+          "id": "mass",
+          "unit": "kg",
+          "name": "Massa",
+          "formula": "sum(children(\"eps\", \"mass\"))"
+        },
+        {
+          "id": "power",
+          "unit": "W",
+          "name": "Consumo próprio",
+          "value": 0.3,
+          "maturity": "cots"
+        },
+        {
+          "id": "power_generation",
+          "unit": "W",
+          "name": "Geração ao Sol (BOL)",
+          "value": 14,
+          "source": "reference",
+          "maturity": "modified"
+        }
+      ],
+      "parentId": "seg_space"
+    },
+    {
+      "id": "obc",
+      "name": "Computador de bordo",
+      "category": "subsystem",
+      "step": 6,
+      "description": "Processador, memória de massa e software de voo.",
+      "short": "OBC",
+      "subsystem": "OBC",
+      "parameters": [
+        {
+          "id": "mass",
+          "unit": "kg",
+          "name": "Massa",
+          "value": 0.1,
+          "maturity": "cots"
+        },
+        {
+          "id": "power",
+          "unit": "W",
+          "name": "Consumo",
+          "value": 1.5,
+          "maturity": "cots"
+        },
+        {
+          "id": "storage_mb",
+          "unit": "MB",
+          "name": "Memória de massa",
+          "value": 8000,
+          "source": "reference"
+        }
+      ],
+      "parentId": "seg_space"
+    },
+    {
+      "id": "com",
+      "name": "Comunicações",
+      "category": "subsystem",
+      "step": 6,
+      "description": "UHF para TT&C e S-band para dados de missão.",
+      "short": "COM",
+      "subsystem": "COM",
+      "parameters": [
+        {
+          "id": "mass",
+          "unit": "kg",
+          "name": "Massa",
+          "formula": "sum(children(\"com\", \"mass\"))"
+        },
+        {
+          "id": "power",
+          "unit": "W",
+          "name": "Consumo transmitindo",
+          "value": 4,
+          "maturity": "cots"
+        },
+        {
+          "id": "power_idle",
+          "unit": "W",
+          "name": "Consumo em recepção",
+          "value": 0.5,
+          "maturity": "cots"
+        }
+      ],
+      "parentId": "seg_space"
+    },
+    {
+      "id": "adcs",
+      "name": "Controle de atitude",
+      "category": "subsystem",
+      "step": 6,
+      "description": "Sensores solares, magnetômetro, roda e magnetorquers.",
+      "short": "ADCS",
+      "subsystem": "ADCS",
+      "parameters": [
+        {
+          "id": "mass",
+          "unit": "kg",
+          "name": "Massa",
+          "formula": "sum(children(\"adcs\", \"mass\"))"
+        },
+        {
+          "id": "power",
+          "unit": "W",
+          "name": "Consumo",
+          "value": 1.2,
+          "maturity": "cots"
+        },
+        {
+          "id": "pointing_accuracy_deg",
+          "unit": "deg",
+          "name": "Precisão de apontamento",
+          "value": 1,
+          "source": "reference",
+          "max": 2
+        }
+      ],
+      "parentId": "seg_space"
+    },
+    {
+      "id": "structure",
+      "name": "Estrutura e térmico",
+      "category": "subsystem",
+      "step": 6,
+      "description": "Chassi 3U, isolamento e heaters da bateria.",
+      "short": "STR",
+      "subsystem": "STR",
+      "parameters": [
+        {
+          "id": "mass",
+          "unit": "kg",
+          "name": "Massa",
+          "formula": "sum(children(\"structure\", \"mass\"))"
+        },
+        {
+          "id": "power",
+          "unit": "W",
+          "name": "Heaters",
+          "value": 1,
+          "maturity": "cots"
+        }
+      ],
+      "parentId": "seg_space"
+    },
+    {
+      "id": "gs_sm",
+      "name": "Estação Santa Maria",
+      "short": "EST",
+      "category": "subsystem",
+      "parentId": "seg_ground",
+      "step": 6,
+      "description": "Antena parabólica de 3 m em banda S e antena UHF em Santa Maria (RS); elevação mínima de 10°.",
+      "parameters": [
+        {
+          "id": "rx_gain_dbi",
+          "value": 34.2,
+          "unit": "dBi",
+          "name": "Ganho da antena de recepção"
+        },
+        {
+          "id": "system_noise_temp_k",
+          "value": 250,
+          "unit": "K",
+          "name": "Temperatura de ruído do sistema"
+        }
+      ]
+    },
+    {
+      "id": "camera",
+      "name": "Câmera RGB",
+      "category": "component",
+      "step": 7,
+      "description": "Câmera compacta com lente de 70 mm.",
+      "parentId": "payload",
+      "subsystem": "PLD",
+      "parameters": [
+        {
+          "id": "mass",
+          "unit": "kg",
+          "name": "Massa",
+          "value": 0.5,
+          "maturity": "modified"
+        },
+        {
+          "id": "power",
+          "unit": "W",
+          "name": "Consumo",
+          "value": 2.5,
+          "maturity": "modified"
+        },
+        {
+          "id": "gsd_m",
+          "unit": "m",
+          "name": "GSD a 550 km",
+          "value": 50,
+          "source": "estimated"
+        },
+        {
+          "id": "data_rate_mbps",
+          "unit": "Mbps",
+          "name": "Taxa de dados",
+          "value": 4,
+          "source": "reference"
+        }
+      ]
+    },
+    {
+      "id": "lora",
+      "name": "Receptor LoRa",
+      "category": "component",
+      "step": 7,
+      "description": "Receptor multicanal para sensores IoT em 915 MHz.",
+      "parentId": "payload",
+      "subsystem": "PLD",
+      "parameters": [
+        {
+          "id": "mass",
+          "unit": "kg",
+          "name": "Massa",
+          "value": 0.08,
+          "maturity": "new"
+        },
+        {
+          "id": "power",
+          "unit": "W",
+          "name": "Consumo",
+          "value": 1,
+          "maturity": "new"
+        },
+        {
+          "id": "messages_per_day",
+          "unit": "-",
+          "name": "Mensagens por dia (estimado)",
+          "value": 3000,
+          "source": "estimated"
+        }
+      ]
+    },
+    {
+      "id": "solar_array",
+      "name": "Painéis solares dobráveis",
+      "category": "component",
+      "step": 7,
+      "description": "Duas asas de 3U com células triplas.",
+      "parentId": "eps",
+      "subsystem": "EPS",
+      "parameters": [
+        {
+          "id": "mass",
+          "unit": "kg",
+          "name": "Massa",
+          "value": 0.4,
+          "maturity": "cots"
+        },
+        {
+          "id": "area_m2",
+          "unit": "m²",
+          "name": "Área total",
+          "value": 0.09,
+          "source": "reference"
+        }
+      ]
+    },
+    {
+      "id": "battery",
+      "name": "Bateria Li-ion",
+      "category": "component",
+      "step": 7,
+      "description": "Pack 2S2P de 18650.",
+      "parentId": "eps",
+      "subsystem": "EPS",
+      "parameters": [
+        {
+          "id": "mass",
+          "unit": "kg",
+          "name": "Massa",
+          "value": 0.25,
+          "maturity": "cots"
+        },
+        {
+          "id": "capacity_wh",
+          "unit": "Wh",
+          "name": "Capacidade",
+          "value": 20,
+          "source": "reference"
+        },
+        {
+          "id": "dod_max",
+          "unit": "-",
+          "name": "Profundidade de descarga máxima",
+          "value": 0.3,
+          "source": "reference"
+        },
+        {
+          "id": "efficiency",
+          "unit": "-",
+          "name": "Eficiência de descarga",
+          "value": 0.9,
+          "source": "reference"
+        }
+      ]
+    },
+    {
+      "id": "eps_board",
+      "name": "Placa EPS",
+      "category": "component",
+      "step": 7,
+      "description": "MPPT, reguladores e proteção.",
+      "parentId": "eps",
+      "subsystem": "EPS",
+      "parameters": [
+        {
+          "id": "mass",
+          "unit": "kg",
+          "name": "Massa",
+          "value": 0.3,
+          "maturity": "cots"
+        }
+      ]
+    },
+    {
+      "id": "uhf",
+      "name": "Transceptor UHF",
+      "category": "component",
+      "step": 7,
+      "description": "TT&C a 9,6 kbps.",
+      "parentId": "com",
+      "subsystem": "COM",
+      "parameters": [
+        {
+          "id": "mass",
+          "unit": "kg",
+          "name": "Massa",
+          "value": 0.1,
+          "maturity": "cots"
+        },
+        {
+          "id": "data_rate_kbps",
+          "unit": "kbps",
+          "name": "Taxa de dados",
+          "value": 9.6,
+          "source": "reference"
+        }
+      ]
+    },
+    {
+      "id": "sband",
+      "name": "Transmissor S-band",
+      "category": "component",
+      "step": 7,
+      "description": "Transmissor de dados de missão.",
+      "parentId": "com",
+      "subsystem": "COM",
+      "parameters": [
+        {
+          "id": "mass",
+          "unit": "kg",
+          "name": "Massa",
+          "value": 0.15,
+          "maturity": "cots"
+        },
+        {
+          "id": "tx_power_w",
+          "unit": "W",
+          "name": "Potência de RF",
+          "value": 1,
+          "source": "reference"
+        },
+        {
+          "id": "data_rate_mbps",
+          "unit": "Mbps",
+          "name": "Taxa de dados",
+          "value": 1,
+          "source": "reference"
+        },
+        {
+          "id": "frequency_ghz",
+          "unit": "GHz",
+          "name": "Frequência",
+          "value": 2.2,
+          "source": "reference"
+        }
+      ]
+    },
+    {
+      "id": "antenna_s",
+      "name": "Antena patch S-band",
+      "category": "component",
+      "step": 7,
+      "description": "Patch na face nadir.",
+      "parentId": "com",
+      "subsystem": "COM",
+      "parameters": [
+        {
+          "id": "mass",
+          "unit": "kg",
+          "name": "Massa",
+          "value": 0.1,
+          "maturity": "cots"
+        },
+        {
+          "id": "gain_dbi",
+          "unit": "dBi",
+          "name": "Ganho",
+          "value": 3,
+          "source": "reference"
+        }
+      ]
+    },
+    {
+      "id": "rw",
+      "name": "Roda de reação",
+      "category": "component",
+      "step": 7,
+      "description": "Roda única para apontamento em guinada.",
+      "parentId": "adcs",
+      "subsystem": "ADCS",
+      "parameters": [
+        {
+          "id": "mass",
+          "unit": "kg",
+          "name": "Massa",
+          "value": 0.2,
+          "maturity": "cots"
+        }
+      ]
+    },
+    {
+      "id": "mag_torquers",
+      "name": "Magnetorquers",
+      "category": "component",
+      "step": 7,
+      "description": "Três bobinas para dessaturação e detumbling.",
+      "parentId": "adcs",
+      "subsystem": "ADCS",
+      "parameters": [
+        {
+          "id": "mass",
+          "unit": "kg",
+          "name": "Massa",
+          "value": 0.15,
+          "maturity": "cots"
+        }
+      ]
+    },
+    {
+      "id": "frame",
+      "name": "Chassi 3U",
+      "category": "component",
+      "step": 7,
+      "description": "Estrutura de alumínio 3U.",
+      "parentId": "structure",
+      "subsystem": "STR",
+      "parameters": [
+        {
+          "id": "mass",
+          "unit": "kg",
+          "name": "Massa",
+          "value": 0.35,
+          "maturity": "cots"
+        }
+      ]
+    },
+    {
+      "id": "heaters",
+      "name": "Heaters da bateria",
+      "category": "component",
+      "step": 7,
+      "description": "Aquecedores resistivos com termostato.",
+      "parentId": "structure",
+      "subsystem": "STR",
+      "parameters": [
+        {
+          "id": "mass",
+          "unit": "kg",
+          "name": "Massa",
+          "value": 0.05,
+          "maturity": "cots"
+        }
+      ]
+    },
+    {
+      "id": "ver_image_test",
+      "name": "Teste de imagem em bancada",
+      "category": "verification",
+      "step": 10,
+      "description": "Alvo calibrado a distância equivalente.",
+      "status": "planned",
+      "metadata": {
+        "method": "Test",
+        "level": "Subsystem"
+      }
+    },
+    {
+      "id": "ver_iot_demo",
+      "name": "Demonstração de coleta IoT",
+      "category": "verification",
+      "step": 10,
+      "description": "Sensores de campo transmitindo para o modelo de engenharia.",
+      "status": "in_progress",
+      "metadata": {
+        "method": "Demonstration",
+        "level": "System"
+      }
+    },
+    {
+      "id": "ver_link_test",
+      "name": "Teste de enlace S-band",
+      "category": "verification",
+      "step": 10,
+      "description": "Enlace ponta a ponta com a estação solo.",
+      "status": "planned",
+      "metadata": {
+        "method": "Test",
+        "level": "System"
+      }
+    },
+    {
+      "id": "ver_power_analysis",
+      "name": "Análise de balanço de energia",
+      "category": "verification",
+      "step": 10,
+      "description": "Perfil de potência por órbita com margens.",
+      "status": "passed",
+      "metadata": {
+        "method": "Analysis",
+        "level": "Subsystem"
+      }
+    },
+    {
+      "id": "ver_deorbit_analysis",
+      "name": "Análise de decaimento orbital",
+      "category": "verification",
+      "step": 10,
+      "description": "Vida orbital com atividade solar média e alta.",
+      "status": "planned",
+      "metadata": {
+        "method": "Analysis",
+        "level": "System"
+      }
+    }
+  ],
+  "relations": [
+    {
+      "id": "rel_req_image_func_image",
+      "type": "allocated_to",
+      "source": "req_image",
+      "target": "func_image",
+      "step": 4,
+      "reviewed": {
+        "source": "5b76fe80",
+        "target": "8963d1e2",
+        "at": "2026-10-18"
+      }
+    },
+    {
+      "id": "rel_req_image_func_attitude",
+      "type": "allocated_to",
+      "source": "req_image",
+      "target": "func_attitude",
+      "step": 4,
+      "reviewed": {
+        "source": "5b76fe80",
+        "target": "4d8a62e1",
+        "at": "2026-10-18"
+      }
+    },
+    {
+      "id": "rel_req_iot_func_collect",
+      "type": "allocated_to",
+      "source": "req_iot",
+      "target": "func_collect",
+      "step": 4,
+      "reviewed": {
+        "source": "4b396f9e",
+        "target": "b990983d",
+        "at": "2026-10-18"
+      }
+    },
+    {
+      "id": "rel_req_downlink_func_downlink",
+      "type": "allocated_to",
+      "source": "req_downlink",
+      "target": "func_downlink",
+      "step": 4,
+      "reviewed": {
+        "source": "a183c744",
+        "target": "f3a35af3",
+        "at": "2026-10-18"
+      }
+    },
+    {
+      "id": "rel_req_downlink_func_command",
+      "type": "allocated_to",
+      "source": "req_downlink",
+      "target": "func_command",
+      "step": 4,
+      "reviewed": {
+        "source": "a183c744",
+        "target": "1a3e4654",
+        "at": "2026-10-18"
+      }
+    },
+    {
+      "id": "rel_req_power_func_power",
+      "type": "allocated_to",
+      "source": "req_power",
+      "target": "func_power",
+      "step": 4,
+      "reviewed": {
+        "source": "3e4e1bb1",
+        "target": "555897f4",
+        "at": "2026-10-19"
+      }
+    },
+    {
+      "id": "rel_func_image_payload",
+      "type": "allocated_to",
+      "source": "func_image",
+      "target": "payload",
+      "step": 6,
+      "reviewed": {
+        "source": "8963d1e2",
+        "target": "78c0c8b0",
+        "at": "2026-10-18"
+      }
+    },
+    {
+      "id": "rel_func_collect_payload",
+      "type": "allocated_to",
+      "source": "func_collect",
+      "target": "payload",
+      "step": 6,
+      "reviewed": {
+        "source": "b990983d",
+        "target": "78c0c8b0",
+        "at": "2026-10-18"
+      }
+    },
+    {
+      "id": "rel_func_downlink_com",
+      "type": "allocated_to",
+      "source": "func_downlink",
+      "target": "com",
+      "step": 6,
+      "reviewed": {
+        "source": "f3a35af3",
+        "target": "27b1b2ed",
+        "at": "2026-10-18"
+      }
+    },
+    {
+      "id": "rel_func_downlink_obc",
+      "type": "allocated_to",
+      "source": "func_downlink",
+      "target": "obc",
+      "step": 6,
+      "reviewed": {
+        "source": "f3a35af3",
+        "target": "175a8a71",
+        "at": "2026-10-18"
+      }
+    },
+    {
+      "id": "rel_func_command_com",
+      "type": "allocated_to",
+      "source": "func_command",
+      "target": "com",
+      "step": 6,
+      "reviewed": {
+        "source": "1a3e4654",
+        "target": "27b1b2ed",
+        "at": "2026-10-18"
+      }
+    },
+    {
+      "id": "rel_func_command_obc",
+      "type": "allocated_to",
+      "source": "func_command",
+      "target": "obc",
+      "step": 6,
+      "reviewed": {
+        "source": "1a3e4654",
+        "target": "175a8a71",
+        "at": "2026-10-18"
+      }
+    },
+    {
+      "id": "rel_func_power_eps",
+      "type": "allocated_to",
+      "source": "func_power",
+      "target": "eps",
+      "step": 6,
+      "reviewed": {
+        "source": "555897f4",
+        "target": "6892e805",
+        "at": "2026-10-19"
+      }
+    },
+    {
+      "id": "rel_func_attitude_adcs",
+      "type": "allocated_to",
+      "source": "func_attitude",
+      "target": "adcs",
+      "step": 6,
+      "reviewed": {
+        "source": "4d8a62e1",
+        "target": "95305a3f",
+        "at": "2026-10-18"
+      }
+    },
+    {
+      "id": "rel_sat_payload_req_image",
+      "type": "satisfies",
+      "source": "payload",
+      "target": "req_image",
+      "step": 9,
+      "reviewed": {
+        "source": "78c0c8b0",
+        "target": "5b76fe80",
+        "at": "2026-10-18"
+      }
+    },
+    {
+      "id": "rel_sat_payload_req_iot",
+      "type": "satisfies",
+      "source": "payload",
+      "target": "req_iot",
+      "step": 9,
+      "reviewed": {
+        "source": "78c0c8b0",
+        "target": "4b396f9e",
+        "at": "2026-10-18"
+      }
+    },
+    {
+      "id": "rel_sat_com_req_downlink",
+      "type": "satisfies",
+      "source": "com",
+      "target": "req_downlink",
+      "step": 9,
+      "reviewed": {
+        "source": "27b1b2ed",
+        "target": "a183c744",
+        "at": "2026-10-18"
+      }
+    },
+    {
+      "id": "rel_sat_eps_req_power",
+      "type": "satisfies",
+      "source": "eps",
+      "target": "req_power",
+      "step": 9,
+      "reviewed": {
+        "source": "6892e805",
+        "target": "3e4e1bb1",
+        "at": "2026-10-19"
+      }
+    },
+    {
+      "id": "rel_sat_satellite_req_mass",
+      "type": "satisfies",
+      "source": "seg_space",
+      "target": "req_mass",
+      "step": 9,
+      "reviewed": {
+        "source": "6a5c5e5b",
+        "target": "19461143",
+        "at": "2026-10-19"
+      }
+    },
+    {
+      "id": "rel_sat_satellite_req_deorbit",
+      "type": "satisfies",
+      "source": "seg_space",
+      "target": "req_deorbit",
+      "step": 9,
+      "reviewed": {
+        "source": "6a5c5e5b",
+        "target": "9adcc9ed",
+        "at": "2026-10-19"
+      }
+    },
+    {
+      "id": "rel_sat_adcs_req_image",
+      "type": "satisfies",
+      "source": "adcs",
+      "target": "req_image",
+      "step": 9,
+      "reviewed": {
+        "source": "95305a3f",
+        "target": "5b76fe80",
+        "at": "2026-10-18"
+      }
+    },
+    {
+      "id": "rel_pwr_eps_payload",
+      "type": "provides_power_to",
+      "source": "eps",
+      "target": "payload",
+      "step": 8,
+      "criticality": "medium"
+    },
+    {
+      "id": "rel_pwr_eps_obc",
+      "type": "provides_power_to",
+      "source": "eps",
+      "target": "obc",
+      "step": 8,
+      "criticality": "high"
+    },
+    {
+      "id": "rel_pwr_eps_com",
+      "type": "provides_power_to",
+      "source": "eps",
+      "target": "com",
+      "step": 8,
+      "criticality": "high"
+    },
+    {
+      "id": "rel_pwr_eps_adcs",
+      "type": "provides_power_to",
+      "source": "eps",
+      "target": "adcs",
+      "step": 8,
+      "criticality": "medium"
+    },
+    {
+      "id": "rel_pwr_eps_structure",
+      "type": "provides_power_to",
+      "source": "eps",
+      "target": "structure",
+      "step": 8,
+      "criticality": "medium"
+    },
+    {
+      "id": "rel_pwr_sa_batt",
+      "type": "provides_power_to",
+      "source": "solar_array",
+      "target": "battery",
+      "step": 8,
+      "label": "Carga da bateria via MPPT"
+    },
+    {
+      "id": "rel_pwr_batt_board",
+      "type": "provides_power_to",
+      "source": "battery",
+      "target": "eps_board",
+      "step": 8
+    },
+    {
+      "id": "rel_data_pld_obc",
+      "type": "sends_data_to",
+      "source": "payload",
+      "target": "obc",
+      "step": 8,
+      "label": "Imagens e mensagens IoT",
+      "criticality": "high"
+    },
+    {
+      "id": "rel_data_obc_com",
+      "type": "sends_data_to",
+      "source": "obc",
+      "target": "com",
+      "step": 8,
+      "label": "Dados de missão e telemetria",
+      "criticality": "high"
+    },
+    {
+      "id": "rel_data_adcs_obc",
+      "type": "sends_data_to",
+      "source": "adcs",
+      "target": "obc",
+      "step": 8,
+      "label": "Atitude estimada"
+    },
+    {
+      "id": "rel_data_cam_lora",
+      "type": "sends_data_to",
+      "source": "camera",
+      "target": "obc",
+      "step": 8,
+      "label": "Imagens comprimidas"
+    },
+    {
+      "id": "rel_cmd_obc_com",
+      "type": "sends_command_to",
+      "source": "com",
+      "target": "obc",
+      "step": 8,
+      "label": "Telecomandos UHF",
+      "criticality": "critical"
+    },
+    {
+      "id": "rel_cmd_pld_obc",
+      "type": "sends_command_to",
+      "source": "obc",
+      "target": "payload",
+      "step": 8
+    },
+    {
+      "id": "rel_cmd_adcs_obc",
+      "type": "sends_command_to",
+      "source": "obc",
+      "target": "adcs",
+      "step": 8
+    },
+    {
+      "id": "rel_mech_payload",
+      "type": "mechanically_attached_to",
+      "source": "payload",
+      "target": "structure",
+      "step": 8
+    },
+    {
+      "id": "rel_mech_eps",
+      "type": "mechanically_attached_to",
+      "source": "eps",
+      "target": "structure",
+      "step": 8
+    },
+    {
+      "id": "rel_mech_obc",
+      "type": "mechanically_attached_to",
+      "source": "obc",
+      "target": "structure",
+      "step": 8
+    },
+    {
+      "id": "rel_mech_com",
+      "type": "mechanically_attached_to",
+      "source": "com",
+      "target": "structure",
+      "step": 8
+    },
+    {
+      "id": "rel_mech_adcs",
+      "type": "mechanically_attached_to",
+      "source": "adcs",
+      "target": "structure",
+      "step": 8
+    },
+    {
+      "id": "rel_thermal_batt",
+      "type": "thermally_coupled_to",
+      "source": "battery",
+      "target": "heaters",
+      "step": 8,
+      "label": "Heaters mantêm a bateria acima de 0 °C",
+      "criticality": "high"
+    },
+    {
+      "id": "rel_thermal_pld",
+      "type": "thermally_coupled_to",
+      "source": "payload",
+      "target": "structure",
+      "step": 8
+    },
+    {
+      "id": "rel_ver_ver_image_test",
+      "type": "verifies",
+      "source": "ver_image_test",
+      "target": "req_image",
+      "step": 10,
+      "reviewed": {
+        "source": "9f5888a0",
+        "target": "5b76fe80",
+        "at": "2026-10-18"
+      }
+    },
+    {
+      "id": "rel_ver_ver_iot_demo",
+      "type": "verifies",
+      "source": "ver_iot_demo",
+      "target": "req_iot",
+      "step": 10,
+      "reviewed": {
+        "source": "dd20a40c",
+        "target": "4b396f9e",
+        "at": "2026-10-18"
+      }
+    },
+    {
+      "id": "rel_ver_ver_link_test",
+      "type": "verifies",
+      "source": "ver_link_test",
+      "target": "req_downlink",
+      "step": 10,
+      "reviewed": {
+        "source": "3611cce1",
+        "target": "a183c744",
+        "at": "2026-10-18"
+      }
+    },
+    {
+      "id": "rel_ver_ver_power_analysis",
+      "type": "verifies",
+      "source": "ver_power_analysis",
+      "target": "req_power",
+      "step": 10,
+      "reviewed": {
+        "source": "79a91e49",
+        "target": "3e4e1bb1",
+        "at": "2026-10-19"
+      }
+    },
+    {
+      "id": "rel_ver_ver_deorbit_analysis",
+      "type": "verifies",
+      "source": "ver_deorbit_analysis",
+      "target": "req_deorbit",
+      "step": 10,
+      "reviewed": {
+        "source": "1f7ad575",
+        "target": "9adcc9ed",
+        "at": "2026-10-18"
+      }
+    },
+    {
+      "id": "rel_req_image_obj",
+      "type": "derives_from",
+      "source": "req_image",
+      "target": "obj_imaging",
+      "label": "REQ-001 deriva de OBJ-1",
+      "step": 3,
+      "reviewed": {
+        "source": "5b76fe80",
+        "target": "466605de",
+        "at": "2026-10-18"
+      }
+    },
+    {
+      "id": "rel_req_iot_obj",
+      "type": "derives_from",
+      "source": "req_iot",
+      "target": "obj_iot",
+      "label": "REQ-002 deriva de OBJ-2",
+      "step": 3,
+      "reviewed": {
+        "source": "4b396f9e",
+        "target": "95b55eb8",
+        "at": "2026-10-18"
+      }
+    },
+    {
+      "id": "rel_req_downlink_obj",
+      "type": "derives_from",
+      "source": "req_downlink",
+      "target": "obj_imaging",
+      "label": "REQ-003 deriva de OBJ-1",
+      "step": 3,
+      "reviewed": {
+        "source": "a183c744",
+        "target": "466605de",
+        "at": "2026-10-18"
+      }
+    },
+    {
+      "id": "rel_req_power_obj",
+      "type": "derives_from",
+      "source": "req_power",
+      "target": "obj_life",
+      "label": "REQ-004 deriva de OBJ-3",
+      "step": 3,
+      "reviewed": {
+        "source": "3e4e1bb1",
+        "target": "da551513",
+        "at": "2026-10-19"
+      }
+    },
+    {
+      "id": "rel_req_deorbit_obj",
+      "type": "derives_from",
+      "source": "req_deorbit",
+      "target": "obj_life",
+      "label": "REQ-006 deriva de OBJ-3",
+      "step": 3,
+      "reviewed": {
+        "source": "9adcc9ed",
+        "target": "da551513",
+        "at": "2026-10-18"
+      }
+    },
+    {
+      "id": "rel_req_mass_launch",
+      "type": "derives_from",
+      "source": "req_mass",
+      "target": "seg_launch",
+      "label": "Envelope do dispenser 3U",
+      "step": 5,
+      "reviewed": {
+        "source": "19461143",
+        "target": "796b49f7",
+        "at": "2026-10-18"
+      }
+    },
+    {
+      "id": "rel_gs_com_cmd",
+      "type": "sends_command_to",
+      "source": "gs_sm",
+      "target": "uhf",
+      "label": "Telecomando UHF",
+      "step": 8,
+      "criticality": "high"
+    },
+    {
+      "id": "rel_ant_gs_data",
+      "type": "sends_data_to",
+      "source": "antenna_s",
+      "target": "gs_sm",
+      "label": "Downlink em banda S",
+      "step": 8,
+      "criticality": "high"
+    },
+    {
+      "id": "rel_frame_launch_mech",
+      "type": "mechanically_attached_to",
+      "source": "frame",
+      "target": "seg_launch",
+      "label": "Trilhos 3U no dispenser",
+      "step": 8,
+      "criticality": "high"
+    },
+    {
+      "id": "rel_gs_satisfies",
+      "type": "satisfies",
+      "source": "gs_sm",
+      "target": "req_downlink",
+      "label": "Estação satisfaz REQ-003",
+      "step": 9,
+      "reviewed": {
+        "source": "14253fb3",
+        "target": "a183c744",
+        "at": "2026-10-18"
+      }
+    },
+    {
+      "id": "rel_lora_obc_data",
+      "type": "sends_data_to",
+      "source": "lora",
+      "target": "obc",
+      "label": "Pacotes LoRa recebidos",
+      "step": 8,
+      "criticality": "high"
+    },
+    {
+      "id": "rel_sband_ant_rf",
+      "type": "sends_data_to",
+      "source": "sband",
+      "target": "antenna_s",
+      "label": "RF em banda S",
+      "step": 8,
+      "criticality": "high"
+    },
+    {
+      "id": "rel_obc_rw_cmd",
+      "type": "sends_command_to",
+      "source": "obc",
+      "target": "rw",
+      "label": "Comando de velocidade da roda",
+      "step": 8
+    },
+    {
+      "id": "rel_obc_mtq_cmd",
+      "type": "sends_command_to",
+      "source": "obc",
+      "target": "mag_torquers",
+      "label": "Comando dos magnetorquers",
+      "step": 8
+    }
+  ],
+  "budgets": [
+    {
+      "id": "mass",
+      "label": "Massa",
+      "unit": "kg",
+      "kind": "mass",
+      "parameter": "mass",
+      "allocated": 4,
+      "systemMargin": 0.2,
+      "rootEntityId": "seg_space"
+    },
+    {
+      "id": "power",
+      "label": "Potência com tudo ligado",
+      "unit": "W",
+      "kind": "power",
+      "parameter": "power",
+      "allocated": 15,
+      "systemMargin": 0,
+      "rootEntityId": "seg_space"
+    }
+  ],
+  "modes": [
+    {
+      "id": "safe",
+      "name": "Safe",
+      "description": "Sobrevivência: OBC, recepção UHF e heaters.",
+      "durationFraction": 0,
+      "active": [
+        "obc",
+        "com",
+        "structure",
+        "eps",
+        "adcs"
+      ],
+      "loads": [
+        {
+          "entityId": "obc",
+          "parameterRef": "obc.power"
+        },
+        {
+          "entityId": "com",
+          "parameterRef": "com.power_idle"
+        },
+        {
+          "entityId": "structure",
+          "parameterRef": "structure.power"
+        }
+      ]
+    },
+    {
+      "id": "nominal",
+      "name": "Nominal",
+      "description": "Ao Sol, coletando IoT.",
+      "durationFraction": 0.5,
+      "active": [
+        "obc",
+        "com",
+        "adcs",
+        "lora",
+        "eps"
+      ],
+      "loads": [
+        {
+          "entityId": "obc",
+          "parameterRef": "obc.power"
+        },
+        {
+          "entityId": "com",
+          "parameterRef": "com.power_idle"
+        },
+        {
+          "entityId": "adcs",
+          "parameterRef": "adcs.power"
+        },
+        {
+          "entityId": "lora",
+          "parameterRef": "lora.power"
+        },
+        {
+          "entityId": "eps",
+          "parameterRef": "eps.power"
+        }
+      ]
+    },
+    {
+      "id": "imaging",
+      "name": "Imageamento",
+      "description": "Câmera ligada sobre a área de interesse.",
+      "durationFraction": 0.1,
+      "active": [
+        "obc",
+        "com",
+        "adcs",
+        "lora",
+        "eps",
+        "camera"
+      ],
+      "loads": [
+        {
+          "entityId": "obc",
+          "parameterRef": "obc.power"
+        },
+        {
+          "entityId": "com",
+          "parameterRef": "com.power_idle"
+        },
+        {
+          "entityId": "adcs",
+          "parameterRef": "adcs.power"
+        },
+        {
+          "entityId": "lora",
+          "parameterRef": "lora.power"
+        },
+        {
+          "entityId": "eps",
+          "parameterRef": "eps.power"
+        },
+        {
+          "entityId": "camera",
+          "parameterRef": "camera.power"
+        }
+      ]
+    },
+    {
+      "id": "downlink",
+      "name": "Downlink",
+      "description": "Transmissor S-band ligado durante o passe.",
+      "durationFraction": 0.1,
+      "active": [
+        "obc",
+        "com",
+        "adcs",
+        "eps"
+      ],
+      "loads": [
+        {
+          "entityId": "obc",
+          "parameterRef": "obc.power"
+        },
+        {
+          "entityId": "com",
+          "parameterRef": "com.power"
+        },
+        {
+          "entityId": "adcs",
+          "parameterRef": "adcs.power"
+        },
+        {
+          "entityId": "eps",
+          "parameterRef": "eps.power"
+        }
+      ]
+    },
+    {
+      "id": "eclipse",
+      "name": "Eclipse",
+      "description": "Na sombra: plataforma e heaters, payload em espera.",
+      "durationFraction": 0.3,
+      "active": [
+        "obc",
+        "com",
+        "adcs",
+        "lora",
+        "structure",
+        "eps"
+      ],
+      "loads": [
+        {
+          "entityId": "obc",
+          "parameterRef": "obc.power"
+        },
+        {
+          "entityId": "com",
+          "parameterRef": "com.power_idle"
+        },
+        {
+          "entityId": "adcs",
+          "parameterRef": "adcs.power"
+        },
+        {
+          "entityId": "lora",
+          "parameterRef": "lora.power"
+        },
+        {
+          "entityId": "structure",
+          "parameterRef": "structure.power"
+        },
+        {
+          "entityId": "eps",
+          "parameterRef": "eps.power"
+        }
+      ]
+    }
+  ],
+  "verifications": [
+    {
+      "id": "vcrm_image",
+      "requirementId": "req_image",
+      "method": "Test",
+      "level": "Subsystem",
+      "status": "planned",
+      "itemId": "camera",
+      "verifierId": "ver_image_test",
+      "description": "Alvo calibrado em bancada óptica."
+    },
+    {
+      "id": "vcrm_iot",
+      "requirementId": "req_iot",
+      "method": "Demonstration",
+      "level": "System",
+      "status": "in_progress",
+      "itemId": "lora",
+      "verifierId": "ver_iot_demo",
+      "description": "Sensores de campo com o modelo de engenharia."
+    },
+    {
+      "id": "vcrm_link",
+      "requirementId": "req_downlink",
+      "method": "Test",
+      "level": "System",
+      "status": "planned",
+      "itemId": "sband",
+      "verifierId": "ver_link_test"
+    },
+    {
+      "id": "vcrm_power",
+      "requirementId": "req_power",
+      "method": "Analysis",
+      "level": "Subsystem",
+      "status": "passed",
+      "itemId": "battery",
+      "verifierId": "ver_power_analysis",
+      "evidence": "Relatório de balanço de energia AMB-EPS-001"
+    },
+    {
+      "id": "vcrm_deorbit",
+      "requirementId": "req_deorbit",
+      "method": "Analysis",
+      "level": "System",
+      "status": "planned",
+      "itemId": "structure",
+      "verifierId": "ver_deorbit_analysis"
+    },
+    {
+      "id": "vcrm_mass",
+      "requirementId": "req_mass",
+      "method": "Analysis",
+      "level": "System",
+      "status": "in_progress",
+      "description": "Budget de massa com margens até a CDR; pesagem do modelo de voo na aceitação."
+    }
+  ],
+  "risks": [
+    {
+      "id": "risk_lora_interference",
+      "title": "Interferência terrestre em 915 MHz reduz a taxa de mensagens",
+      "probability": 4,
+      "impact": 3,
+      "mitigation": "Saltos de frequência e janelas de escuta sobre áreas rurais.",
+      "status": "open",
+      "entityIds": [
+        "lora"
+      ],
+      "category": "technical"
+    },
+    {
+      "id": "risk_panel_deploy",
+      "title": "Painéis dobráveis não abrem",
+      "probability": 2,
+      "impact": 5,
+      "mitigation": "Mecanismo de fio queimável redundante e teste de abertura em vácuo.",
+      "status": "mitigated",
+      "entityIds": [
+        "solar_array",
+        "eps"
+      ],
+      "category": "technical"
+    },
+    {
+      "id": "risk_launch_slot",
+      "title": "Atraso do lançamento compartilhado",
+      "probability": 3,
+      "impact": 2,
+      "mitigation": "Contrato com janela alternativa.",
+      "status": "accepted",
+      "entityIds": [],
+      "category": "schedule"
+    }
+  ],
+  "views": {
+    "defaultStep": 10,
+    "maxStep": 10,
+    "layout2D": "layered",
+    "layout3D": "radial-fan"
+  }
+}

@@ -1,0 +1,106 @@
+/* ── 3D scene shell ─────────────────────────────────────── */
+.scene3d-shell {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: var(--ground);
+}
+
+/* Camera HUD: a floating toolbar, so it may have radius and shadow. */
+.scene3d-hud {
+  position: absolute;
+  top: 10px;
+  left: 12px;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 4px 6px;
+  width: fit-content;
+  max-width: calc(100% - 24px);
+  background: var(--panel);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-float);
+  box-shadow: var(--shadow-float);
+  z-index: 10;
+}
+.hud-divider { width: 1px; height: 18px; background: var(--line-strong); margin: 0 2px; }
+.hud-chips { display: flex; flex-wrap: wrap; gap: 2px; }
+
+/* Top-down minimap */
+.scene-minimap {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  width: 200px;
+  padding: 6px 6px 4px;
+  background: var(--panel);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-float);
+  box-shadow: var(--shadow-float);
+  z-index: 10;
+}
+.scene-minimap__head { font-size: var(--text-12); color: var(--ink-2); margin-bottom: 4px; }
+/* Side by side the 3D cell is narrow: a smaller minimap keeps the scene visible. */
+.split-canvas .scene-minimap { width: 128px; }
+.split-canvas .scene-minimap svg { width: 100%; height: auto; }
+.scene-minimap svg { display: block; }
+
+/* Relation tube badge (rendered via drei <Html>) — same badge as 2D and legend. */
+.relation-tube-badge {
+  box-shadow: 0 0 0 1px var(--ground);
+  pointer-events: none;
+}
+.relation-tube-badge.is-selected { width: 22px; height: 22px; font-size: 12px; box-shadow: 0 0 0 2px var(--ink); }
+
+/* ── Physical scene (satellite in orbit) ─────────────────── */
+.phys-telemetry {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 300px;
+  padding: 8px 10px;
+  font-size: var(--text-12);
+  color: var(--ink-2);
+  background: var(--panel);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-float);
+  box-shadow: var(--shadow-float);
+}
+.phys-telemetry__clock {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--line);
+  font-family: var(--font-mono);
+  font-size: var(--text-13);
+  color: var(--ink);
+}
+.phys-telemetry__chips { display: flex; flex-wrap: wrap; gap: 4px; }
+.phys-telemetry__row { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.phys-telemetry__row .mono { color: var(--ink); }
+.phys-telemetry__row--gauge { display: grid; grid-template-columns: auto 1fr auto; }
+.phys-gauge { display: block; height: 6px; background: var(--raised); overflow: hidden; }
+.phys-gauge__fill { display: block; height: 100%; background: var(--ok); transition: width var(--dur) var(--ease); }
+.phys-gauge__fill.is-warn { background: var(--warn); }
+.phys-gauge__fill.is-fail { background: var(--fail); }
+.phys-note {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  z-index: 10;
+  max-width: 300px;
+  padding: 6px 10px;
+  color: var(--ink-2);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-float);
+}
+/* The narrow split cell has no room beside the telemetry panel. */
+.split-canvas .phys-note { display: none; }

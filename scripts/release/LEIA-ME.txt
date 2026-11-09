@@ -1,0 +1,34 @@
+Trama, versão pronta
+====================
+
+Esta pasta traz o Trama já compilado (pasta "app"). Não precisa instalar
+Node.js nem baixar dependências.
+
+Windows
+  Dê dois cliques em "Abrir TRAMA.bat". O navegador abre sozinho.
+  Se o Windows avisar que protegeu o computador, clique em "Mais informações"
+  e depois em "Executar assim mesmo". Para encerrar, feche a janela preta.
+
+macOS
+  Dê dois cliques em "Abrir TRAMA.command". Se o macOS bloquear, clique com o
+  botão direito no arquivo, escolha "Abrir" e confirme (nas versões mais novas:
+  Ajustes do Sistema > Privacidade e Segurança > Abrir Mesmo Assim). Outra saída
+  é rodar sh abrir.sh no Terminal, dentro desta pasta. Precisa do Python 3;
+  se faltar, o Terminal oferece instalar as ferramentas de linha de comando.
+
+Linux
+  No terminal, dentro desta pasta: sh abrir.sh
+
+O endereço é http://localhost:4173 (ou a próxima porta livre, até 4193).
+
+Comandos de voz
+  Funcionam no Chrome e no Edge, com permissão de microfone e internet: o
+  navegador envia o áudio ao serviço de transcrição dele. Digitados, os mesmos
+  comandos funcionam sem internet.
+
+Cena 3D
+  Ao abrir, a cena 3D baixa a fonte dos rótulos de cdn.jsdelivr.net. Sem
+  internet, as cenas 3D ficam em branco; o resto do programa funciona.
+
+Não abra app/index.html com dois cliques: o navegador bloqueia os módulos do
+programa quando a página vem de file://. Use sempre um dos atalhos acima.

@@ -1,0 +1,23 @@
+# Dependencies and build output
+node_modules/
+/dist/
+/release/
+
+# Local environment files
+.env
+.env.*
+*.local
+
+# Logs
+*.log
+npm-debug.log*
+
+# Editors
+.vscode/
+.idea/
+*.swp
+
+# Operating systems
+.DS_Store
+Thumbs.db
+desktop.ini
